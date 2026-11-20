@@ -1,6 +1,7 @@
 import { computed, inject, Injectable, InjectionToken, signal } from '@angular/core';
 
-import { Issue, IssueInput, IssueStatus } from '../models/issue.model';
+import { filterIssues, IssueFilters } from '../models/issue-filter';
+import { Issue, IssueInput, IssuePriority, IssueStatus } from '../models/issue.model';
 import {
   isNonEmptyIdentifier,
   isSerializedDate,
@@ -10,6 +11,12 @@ import {
   validateIssueInput,
 } from '../models/issue-validation';
 import { IssueStorageError, IssueStorageService } from './issue-storage.service';
+
+const DEFAULT_FILTERS: Readonly<IssueFilters> = Object.freeze({
+  query: '',
+  status: null,
+  priority: null,
+});
 
 export const ISSUE_ID_GENERATOR = new InjectionToken<() => string>('ISSUE_ID_GENERATOR', {
   providedIn: 'root',
@@ -49,10 +56,27 @@ export class IssueService {
   private readonly generateId = inject(ISSUE_ID_GENERATOR);
   private readonly clock = inject(ISSUE_CLOCK);
   private readonly state = signal<IssueState>(this.loadInitialState());
+  private readonly activeFilters = signal<IssueFilters>(DEFAULT_FILTERS);
 
   readonly issues = computed(() => this.state().issues);
   readonly persistenceError = computed(() => this.state().error);
   readonly hasPendingChanges = computed(() => this.state().pending);
+  readonly filters = computed(() => this.activeFilters());
+  readonly filteredIssues = computed(() =>
+    Object.freeze(filterIssues(this.issues(), this.filters())),
+  );
+
+  setSearchQuery(query: string): void {
+    this.activeFilters.update((filters) => freezeFilters({ ...filters, query }));
+  }
+
+  setStatusFilter(status: IssueStatus | null): void {
+    this.activeFilters.update((filters) => freezeFilters({ ...filters, status }));
+  }
+
+  setPriorityFilter(priority: IssuePriority | null): void {
+    this.activeFilters.update((filters) => freezeFilters({ ...filters, priority }));
+  }
 
   getById(id: string): Readonly<Issue> | undefined {
     return this.issues().find((issue) => issue.id === id);
@@ -211,4 +235,8 @@ function freezeIssue(issue: Readonly<Issue>): Readonly<Issue> {
     createdAt: issue.createdAt,
     updatedAt: issue.updatedAt,
   });
+}
+
+function freezeFilters(filters: IssueFilters): Readonly<IssueFilters> {
+  return Object.freeze({ ...filters });
 }

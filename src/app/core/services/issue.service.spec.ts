@@ -73,6 +73,98 @@ describe('IssueService', () => {
     expect(instance.getById('missing')).toBeUndefined();
   });
 
+  it('exposes immutable filters and derives case-insensitive search results', () => {
+    load.mockReturnValue({
+      ok: true,
+      issues: [
+        existing(),
+        { ...existing(), id: 'other', title: 'Other issue', description: 'Account is locked' },
+      ],
+    });
+    const instance = service();
+    expect(instance.filteredIssues()).toHaveLength(2);
+    expect(Object.isFrozen(instance.filters())).toBe(true);
+    expect(Object.isFrozen(instance.filteredIssues())).toBe(true);
+
+    instance.setSearchQuery('  ACCOUNT  ');
+
+    expect(instance.filters().query).toBe('  ACCOUNT  ');
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual(['other']);
+    expect(instance.issues()).toHaveLength(2);
+  });
+
+  it('combines filters and clears each criterion with its explicit empty value', () => {
+    load.mockReturnValue({
+      ok: true,
+      issues: [
+        existing(),
+        {
+          ...existing(),
+          id: 'matching-high',
+          title: 'Example issue with matching priority',
+          priority: 'high',
+        },
+        {
+          ...existing(),
+          id: 'resolved-high',
+          title: 'Example issue resolved',
+          priority: 'high',
+          status: 'resolved',
+        },
+      ],
+    });
+    const instance = service();
+    instance.setSearchQuery(' example issue ');
+    instance.setStatusFilter('open');
+    instance.setPriorityFilter('high');
+
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual(['matching-high']);
+
+    instance.setStatusFilter(null);
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual([
+      'matching-high',
+      'resolved-high',
+    ]);
+    instance.setPriorityFilter(null);
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual([
+      'existing',
+      'matching-high',
+      'resolved-high',
+    ]);
+    instance.setSearchQuery('');
+    expect(instance.filteredIssues()).toEqual(instance.issues());
+  });
+
+  it('recomputes filtered results after issue operations', () => {
+    load.mockReturnValue({ ok: true, issues: [existing()] });
+    const instance = service();
+    instance.setStatusFilter('open');
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual(['existing']);
+
+    instance.create(input({ title: 'New issue' }));
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual(['existing', 'new-id']);
+
+    instance.changeStatus('new-id', 'resolved');
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual(['existing']);
+
+    instance.update('existing', input({ title: 'Renamed issue' }));
+    instance.setSearchQuery('renamed');
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual(['existing']);
+
+    instance.delete('existing');
+    expect(instance.filteredIssues()).toEqual([]);
+  });
+
+  it('preserves internal search spaces and treats whitespace-only search as inactive', () => {
+    load.mockReturnValue({ ok: true, issues: [existing()] });
+    const instance = service();
+    instance.setSearchQuery('Fix  login');
+    expect(instance.filteredIssues()).toEqual([]);
+
+    instance.setSearchQuery('   ');
+    expect(instance.filteredIssues().map((issue) => issue.id)).toEqual(['existing']);
+  });
+
   it('creates normalized content, generates audit fields and writes once', () => {
     const instance = service();
     const candidate = {

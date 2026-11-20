@@ -11,8 +11,8 @@ y actualización. La inclusión de una funcionalidad no aprueba su implementaci�
 
 ## Estado actual
 
-Corte inicial contrastado el **20 de noviembre de 2026**, sobre `53cabe1`, con el árbol
-de trabajo limpio antes de incorporar este seguimiento. Hay una base de dominio y servicios
+Corte revisado el **20 de noviembre de 2026**, sobre la base `54793e1` más los cambios
+revisados de IF-005 en el árbol de trabajo. La base de dominio, persistencia y filtrado está
 probada; **el MVP todavía no es utilizable desde la interfaz**. La raíz conserva la plantilla
 de Angular, `app.routes.ts` está vacío y ninguna pantalla consume `IssueService`.
 
@@ -37,7 +37,7 @@ revisarse al aprobar cada plan sin ampliar el producto.
 | IF-002 | Validación y normalización del dominio             | completada | IF-001                         |
 | IF-003 | Persistencia local y errores de almacenamiento     | completada | IF-001, IF-002                 |
 | IF-004 | Estado de incidencias y operaciones de negocio     | completada | IF-002, IF-003                 |
-| IF-005 | Búsqueda y filtros combinados                      | pendiente  | IF-004                         |
+| IF-005 | Búsqueda y filtros combinados                      | completada | IF-004                         |
 | IF-006 | Estadísticas derivadas                             | pendiente  | IF-004                         |
 | IF-007 | Estructura de navegación y arranque de la interfaz | pendiente  | IF-004                         |
 | IF-008 | Listado y acciones de incidencias                  | pendiente  | IF-005, IF-007                 |
@@ -86,8 +86,12 @@ Evidencia: [IssueService](../src/app/core/services/issue.service.ts) y
 Alcance: selección derivada de la colección fuente para título/descripción, estado y prioridad
 (requisitos §2.2, aceptación 8–9). Finalización: búsqueda y filtros funcionan solos y combinados,
 se puede representar la ausencia de filtro y los resultados se actualizan tras las operaciones
-sin mantener otra colección fuente. Pruebas de vacío, coincidencias y combinaciones.
-La política exacta de mayúsculas y espacios se concretará en el plan aprobado.
+sin mantener otra colección fuente. La búsqueda ignora mayúsculas, recorta los espacios
+exteriores y conserva los internos; `null` representa un filtro inactivo. Pruebas de vacío,
+coincidencias, combinaciones y actualización reactiva. Evidencia: [filtro](../src/app/core/models/issue-filter.ts),
+[pruebas del filtro](../src/app/core/models/issue-filter.spec.ts) y
+[servicio de incidencias](../src/app/core/services/issue.service.ts) con sus pruebas.
+La lógica está integrada en el dominio y todavía no se presenta en una interfaz.
 
 ### IF-006 — Estadísticas derivadas
 
@@ -144,13 +148,12 @@ manual o automatizada según las herramientas disponibles. Registrar cualquier e
 verificado; no exige instalar un runner E2E nuevo. Las comprobaciones de calidad requeridas
 deben pasar antes del cierre global; ninguna pantalla incompleta se considera producto terminado.
 
-## Evidencia y discrepancias del corte inicial
+## Evidencia y discrepancias del corte actual
 
-Los cuatro bloques técnicos marcados como completados tienen código contrastado y revisión
-independiente sin hallazgos en el trabajo previo. En este corte se han vuelto a ejecutar
-**117 pruebas en cuatro archivos**, lint y TypeScript sin emisión, correctamente. El build
-pasó en el cierre de `53cabe1`; no se ha repetido para esta tarea documental.
-La revisión de los bloques técnicos no acredita todavía los criterios de usuario completos.
+Los cinco bloques de dominio, persistencia y filtrado marcados como completados tienen código
+contrastado y revisión independiente sin hallazgos. Para este corte se ejecutaron correctamente
+**127 pruebas en cinco archivos**, lint y build. Prettier pasó en los cuatro archivos de IF-005.
+La revisión de estos bloques técnicos no acredita todavía los criterios de usuario completos.
 
 `npm run format:check` presenta una deuda preexistente en 12 archivos ajenos a esta tarea.
 Los archivos técnicos completados cumplen su formato específico. Esta limitación se mantiene
@@ -163,13 +166,12 @@ evidencia de verificación visual, navegación real ni persistencia a través de
 
 ## Siguiente paso recomendado
 
-Planificar **IF-005, búsqueda y filtros combinados**, porque IF-004 ya aporta la colección
-reactiva y el listado necesitará esa selección. El plan deberá fijar el contrato de filtros,
-normalización de consulta y pruebas sin añadir pantallas todavía. IF-006 e IF-007 son otras
-ramas preparadas para planificar; la prioridad final pertenece al usuario.
+Planificar **IF-007, estructura de navegación y arranque de la interfaz**, para establecer
+el shell y la navegación que necesitan las páginas del MVP. IF-006, estadísticas derivadas,
+es una rama independiente y habilita IF-011; la prioridad final pertenece al usuario.
 
-No hay una implementación autorizada en curso. La próxima acción es presentar el plan de
-la funcionalidad elegida y esperar aprobación; esta recomendación no la concede.
+No hay otra implementación autorizada en curso. La próxima acción es presentar el plan
+IF-007 y esperar aprobación; esta recomendación no la concede.
 
 ## Estados y mantenimiento
 
