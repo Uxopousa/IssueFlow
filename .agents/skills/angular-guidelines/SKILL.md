@@ -1,6 +1,6 @@
 ---
 name: angular-guidelines
-description: "Use when designing, implementing, reviewing, or refactoring Angular 21 applications with standalone components, Signals, dependency injection, Router, Reactive Forms, strict TypeScript, or modern Angular control flow."
+description: 'Use when designing, implementing, reviewing, or refactoring Angular 21 applications with standalone components, Signals, dependency injection, Router, Reactive Forms, strict TypeScript, or modern Angular control flow.'
 ---
 
 # Angular Guidelines
@@ -53,7 +53,7 @@ No introduzcas una librería de estado global si Signals y servicios resuelven e
 - Inyecta dependencias con `inject()` en código nuevo cuando mejore la claridad.
 - Separa el servicio que coordina reglas de negocio del que accede a almacenamiento, red o APIs del navegador.
 - No accedas a `localStorage`, `HttpClient` o `Router` directamente desde componentes salvo que sea una necesidad explícita de presentación.
-- Valida y tipa los datos recibidos de fuentes externas antes de incorporarlos al estado.
+- Valida y tipa los datos recibidos de fuentes externas antes de incorporarlos al estado. Aplica los criterios de la skill `clean-code-architecture`, especialmente «Validación de objetos y reglas del modelo».
 
 ## Router
 

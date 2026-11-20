@@ -29,13 +29,13 @@ Actívala al diseñar una solución, revisar código, refactorizar una unidad ex
 ## Funciones y complejidad
 
 - Mantén las funciones pequeñas y con una responsabilidad clara.
-- Extrae condiciones complejas a funciones semánticas cuando reduzca la carga cognitiva.
+- Cuando una función concentre validaciones independientes, extrae grupos coherentes a helpers pequeños con una responsabilidad y un nombre claros, siempre que permitan entender mejor el flujo.
 - Usa guard clauses y early returns para evitar anidamiento innecesario.
 - Separa validación, transformación y ejecución cuando tengan motivos de cambio distintos.
 - Evita demasiados parámetros; agrúpalos en un tipo solo cuando representen un concepto real.
 - No uses booleanos que cambien significativamente el comportamiento si dos operaciones explícitas son más claras.
 - Extrae la lógica compleja de los bucles a funciones descriptivas.
-- No extraigas funciones triviales solo para cumplir una regla mecánica.
+- No crees un helper por cada condición ni extraigas código solo para reducir líneas. Conserva las comprobaciones en línea cuando resulten más claras y evita obligar al lector a saltar entre funciones para comprender una regla sencilla.
 
 ```ts
 const urgentIssues = issues.filter(isUrgentIssue);
@@ -45,6 +45,12 @@ function isUrgentIssue(issue: Issue): boolean {
   return issue.status === 'open' && issue.priority === 'high' && issue.title.length > 10;
 }
 ```
+
+## Validación de objetos y reglas del modelo
+
+- Al validar objetos JavaScript o TypeScript, distingue propiedades propias de heredadas. Cuando el contrato exija propiedades propias, prefiere `Object.hasOwn(objeto, campo)` frente a `'campo' in objeto`, después de comprobar que el valor es un objeto no nulo. Comprueba también el tipo y el valor de cada propiedad; su existencia no basta para validar el objeto.
+- Mantén explícitas y fáciles de localizar las reglas del modelo: campos obligatorios y permitidos, valores válidos y relaciones entre campos. Organízalas en tipos, constantes o validadores con nombres claros según lo que mejore la lectura, sin imponer una abstracción nueva.
+- No confundas exigir propiedades propias con rechazar campos adicionales: aplica cada restricción solo cuando forme parte del contrato. No introduzcas reglas de dominio nuevas durante una refactorización de legibilidad.
 
 ## Principios de diseño
 

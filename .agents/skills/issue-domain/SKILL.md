@@ -51,6 +51,8 @@ No añadas campos, estados o prioridades por iniciativa propia. Si el requisito 
 
 La validación de UI mejora la experiencia, pero el servicio debe validar también las entradas de negocio. Los datos de `localStorage` deben pasar una validación de forma y valores antes de entrar al estado.
 
+Para organizar estas comprobaciones, aplica «Funciones y complejidad» y «Validación de objetos y reglas del modelo» de la skill `clean-code-architecture`. Mantén los campos, valores y relaciones definidos por los requisitos y las decisiones aprobadas; no añadas restricciones por iniciativa propia.
+
 ## Búsqueda, filtros y estadísticas
 
 - Busca por coincidencias de texto en `title` y `description`.
