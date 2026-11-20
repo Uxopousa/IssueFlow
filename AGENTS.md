@@ -25,6 +25,13 @@ IssueFlow es una aplicación Angular 21 con TypeScript estricto y Tailwind CSS 4
 
 No añadas backend, autenticación, roles, permisos, notificaciones ni otras funcionalidades excluidas en [`docs/requirements.md`](docs/requirements.md) sin una petición explícita y una actualización previa del alcance.
 
+## Seguimiento del desarrollo
+
+- Consulta siempre [`docs/roadmap.md`](docs/roadmap.md) antes de planificar y al reanudar trabajo. Es la fuente única del progreso, dependencias y siguiente paso; no copies su lista en instrucciones o skills.
+- Contrasta sus estados con código, pruebas y Git. Una marca de completado no sustituye la evidencia; informa de discrepancias y dependencias pendientes.
+- Vincula cada plan a los IDs estables del roadmap, su alcance y criterios de finalización. El roadmap no autoriza implementar ni ampliar alcance: el plan requiere aprobación explícita.
+- Sigue [`ai/workflows/feature-development.md`](ai/workflows/feature-development.md) para proponer y aplicar actualizaciones de seguimiento solo después de conocer el resultado de la revisión. No marques completado con criterios, hallazgos aceptados o comprobaciones pertinentes pendientes.
+
 ## Calidad y herramientas de desarrollo
 
 - Respeta la configuración de ESLint y Prettier definida en el proyecto.

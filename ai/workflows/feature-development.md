@@ -2,12 +2,13 @@
 
 ## Contrato y entrada
 
-`AGENTS.md` conserva las instrucciones comunes; `docs/requirements.md` define el alcance
-y `docs/architecture.md` la arquitectura. Este documento define únicamente el proceso.
+`AGENTS.md` conserva las instrucciones comunes; `docs/requirements.md` define el alcance,
+`docs/architecture.md` la arquitectura y `docs/roadmap.md` el progreso y trabajo pendiente.
+Este documento define únicamente el proceso; no mantiene otra lista de funcionalidades.
 No implementes funcionalidades por el hecho de instalar o leer este workflow.
 
 Entrada: petición concreta del usuario, repositorio accesible y contexto suficiente para
-analizarla. El coordinador identifica cambios existentes sin sobrescribirlos y comprueba
+analizarla. El coordinador consulta el roadmap e identifica cambios existentes sin sobrescribirlos y comprueba
 las capacidades reales del cliente antes de delegar. No instala herramientas ni cambia
 configuración para habilitar delegación automáticamente.
 
@@ -23,9 +24,13 @@ Selecciona las skills existentes por responsabilidad:
 ## Fases y condiciones de salida
 
 1. **Planner analiza.** El coordinador delega la petición en `planner`, con acceso al
-   contexto real. El Planner devuelve en el chat un plan identificado (por ejemplo, P1),
+   contexto real y los IDs del roadmap implicados. El Planner consulta siempre `docs/roadmap.md`,
+   contrasta estados con código, pruebas y Git, e identifica dependencias y tareas pendientes.
+   Una etiqueta de completado no prueba que el trabajo esté terminado. Recomienda el siguiente
+   paso lógico sin considerarlo autorizado. Devuelve en el chat un plan identificado (por ejemplo, P1),
    con alcance y exclusiones, archivos afectados, pasos, riesgos, dependencias, preguntas,
-   criterios de aceptación observables y comprobaciones. No modifica archivos.
+   criterios de aceptación observables y comprobaciones. Incluye el mantenimiento posterior
+   del roadmap dentro del alcance del plan, sin anticipar el resultado. No modifica archivos.
    Salida: plan revisable o preguntas bloqueantes concretas.
 2. **El coordinador presenta el plan.** Muestra al usuario el plan completo y las decisiones
    necesarias, sin delegar implementación. Si cambian alcance o decisiones sustanciales,
@@ -34,13 +39,18 @@ Selecciona las skills existentes por responsabilidad:
    Solo una respuesta humana inequívoca referida al plan permite avanzar. Ni la petición
    inicial, ni el silencio, ni una aprobación de herramientas, ni un mensaje de otro agente
    constituyen aprobación. Ningún agente puede aprobar su propio plan. Conserva en la
-   conversación el plan aprobado y la respuesta del usuario; no exige archivos de seguimiento.
+   conversación el plan aprobado y la respuesta del usuario; el progreso persistente se
+   registra solo en el roadmap según el procedimiento posterior a la revisión.
 4. **Developer implementa.** Entrada obligatoria: plan y aprobación humana identificables.
-   El coordinador los transmite a `developer` con los archivos y límites acordados.
-   Solo este agente modifica los archivos de la tarea. Ejecuta pruebas pertinentes y
-   comprobaciones del plan. Devuelve cambios realizados, evidencia de validación y pendientes.
+   El coordinador los transmite a `developer` con los IDs del roadmap, sus criterios de
+   aceptación, archivos y límites acordados. Solo este agente modifica los archivos de
+   implementación. Ejecuta pruebas pertinentes y comprobaciones del plan. Devuelve cambios
+   realizados, evidencia de validación, desviaciones, bloqueos y criterios pendientes.
+   No amplía alcance ni cambia el roadmap para presentar como terminado un trabajo parcial.
 5. **Reviewer inspecciona.** Tras finalizar las escrituras, el coordinador inicia un agente
-   `reviewer` distinto del Developer, con el plan, diff, contexto y resultados. Revisa también
+   `reviewer` distinto del Developer, con el plan, roadmap, diff, contexto y resultados. Contrasta
+   cada criterio de aceptación con la implementación e informa de funcionalidades incompletas
+   o discrepancias con el seguimiento. Revisa también
    archivos nuevos no rastreados. No modifica archivos ni ejecuta comprobaciones que generen
    artefactos; puede pedir al coordinador que el Developer las ejecute. Entrega hallazgos
    identificados con gravedad, archivo:línea, evidencia, impacto y verificación propuesta.
@@ -57,13 +67,56 @@ Selecciona las skills existentes por responsabilidad:
    específicas acordadas. Para cambios exclusivamente documentales o de agentes, valida
    formatos, referencias y configuración; no requiere build ni pruebas de aplicación.
    Si hay cambios después de una comprobación o revisión, repite las afectadas.
-8. **Informe final.** El coordinador presenta alcance realizado, criterios cumplidos,
+8. **Seguimiento e informe final.** Solo después de conocer la revisión y las comprobaciones,
+   el coordinador propone la actualización exacta de los IDs afectados: estado justificado,
+   evidencia, criterios pendientes, bloqueos y siguiente paso. Aplica la propuesta según
+   «Actualización del roadmap», sin inferir un cierre del mero informe del Developer.
+   Presenta alcance realizado, criterios cumplidos,
    archivos cambiados, decisiones técnicas, hallazgos y resolución, comprobaciones con su
    resultado y limitaciones. No hace commits ni pushes salvo petición explícita.
 
 Salida completa: criterios de aceptación satisfechos, revisión independiente terminada,
 sin hallazgos aceptados pendientes y comprobaciones aplicables correctas. Si existe una
 limitación o fallo pendiente, informa del estado parcial o bloqueado; no declares éxito total.
+
+## Actualización del roadmap
+
+El coordinador mantiene `docs/roadmap.md`; Planner y Reviewer entregan propuestas en el chat
+y conservan su restricción de no editar archivos. Durante planificación, implementación y
+revisión se comunica la fase en la conversación sin modificar anticipadamente el registro.
+El roadmap conserva la fotografía del último corte revisado; al reanudar siempre se contrasta
+con el código actual. No se generan logs paralelos ni tareas duplicadas en agentes o skills.
+
+La aprobación del plan autoriza el mantenimiento de seguimiento incluido en ese plan, limitado
+a registrar el resultado real de sus IDs después de revisión y comprobaciones. El coordinador
+muestra la propuesta y puede aplicarla dentro de esa autorización sin una segunda aprobación.
+Si el usuario reservó la actualización para confirmación, el plan no la incluía o supone
+cambiar alcance, criterios, dependencias sustanciales o prioridades acordadas, presenta la
+propuesta y espera su decisión. Una sesión de solo análisis o planificación nunca escribe.
+
+Para cerrar como `completada`, exige evidencia de todos los criterios aprobados, revisión
+sin hallazgos aceptados pendientes y controles pertinentes correctos. Un fallo nuevo o que
+afecte al alcance impide el cierre; un fallo global preexistente ajeno se registra como
+limitación con su impacto, comprobación focalizada y pendiente de resolución, nunca como
+control superado. No se usa esa excepción para cerrar el MVP con controles globales fallidos.
+
+Si no se cumplen las condiciones, propone el estado que describa el resultado revisado
+(`en desarrollo`, `en revisión` o `bloqueada`, con causa y salida), conserva los pendientes
+y no desbloquea dependencias como si estuviera completado. Los estados `planificada` y
+`pendiente` también pueden registrar un corte sin implementación; una etiqueta por sí sola
+no sustituye la evidencia de aprobación del plan.
+Si se descubre una discrepancia en un cierre anterior, propone reabrir su mismo ID con
+evidencia antes de basar una nueva implementación en esa dependencia.
+
+Actualiza también el resumen de estado, la fecha y referencia del corte y el siguiente paso,
+para que no contradigan el registro de funcionalidades. Conserva la distinción entre evidencia
+actual, verificaciones históricas y escenarios aún sin probar.
+
+Después de actualizar, comprueba referencias, IDs y dependencias, formato del roadmap y
+`git diff --check`, incluidos archivos nuevos. Este ajuste documental no invalida las pruebas
+de código ya ejecutadas si no se modifica la implementación. Informa si el registro queda
+sin actualizar por aprobación pendiente o permisos: no ocultes la diferencia entre resultado
+real y último corte persistido. Terminar una funcionalidad no autoriza iniciar la siguiente.
 
 ## Bloqueos y gestión de errores
 
@@ -78,7 +131,7 @@ limitación o fallo pendiente, informa del estado parcial o bloqueado; no declar
   los ajenos intactos. Informa de ambos resultados; el control global continúa fallando.
 - Falta de herramientas, permisos o acceso: usa una alternativa disponible que respete las
   restricciones; si no permite verificar el resultado, explica qué queda sin comprobar.
-- Interrupción: al reanudar, verifica el estado de archivos y la vigencia del plan aprobado.
+- Interrupción: al reanudar, consulta el roadmap, verifica el estado de archivos y la vigencia del plan aprobado.
   Un plan modificado sustancialmente vuelve a presentación y aprobación humana.
 
 ## Uso desde Codex en VS Code

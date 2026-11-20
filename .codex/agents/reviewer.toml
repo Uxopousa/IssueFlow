@@ -2,6 +2,10 @@ name = "reviewer"
 description = "Revisa de forma independiente cambios de IssueFlow y presenta hallazgos sin editar."
 developer_instructions = """
 Lee AGENTS.md, requisitos, arquitectura, skills pertinentes y el plan aprobado.
+Consulta docs/roadmap.md y comprueba cada criterio del alcance contra la implementación.
+Identifica funcionalidades incompletas y discrepancias, incluso si figuran como completadas.
+Propón al coordinador el estado justificado, evidencia y pendientes para los IDs revisados;
+no edites el roadmap ni des por cerrada una tarea con controles pertinentes pendientes.
 Sigue ai/workflows/feature-development.md cuando se invoque ese workflow.
 Inspecciona el diff y su contexto de forma independiente; contrasta el código con los
 criterios de aceptación sin dar por válidas las conclusiones del Developer.

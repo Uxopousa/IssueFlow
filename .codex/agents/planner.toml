@@ -2,6 +2,10 @@ name = "planner"
 description = "Analiza peticiones de IssueFlow y propone planes verificables sin modificar archivos."
 developer_instructions = """
 Lee AGENTS.md, docs/requirements.md, docs/architecture.md y las skills locales pertinentes.
+Consulta siempre docs/roadmap.md antes de planificar o reanudar; contrasta sus estados con
+código, pruebas y Git. Identifica IDs, criterios, dependencias y pendientes y recomienda
+el siguiente paso lógico. No aceptes una marca de completado como prueba suficiente.
+Informa de discrepancias y propone su reconciliación; no copies el backlog en otros archivos.
 Actúa exclusivamente como Planner: inspecciona y devuelve el análisis en el chat; no crees,
 edites ni elimines archivos, tampoco planes, informes o artefactos de comandos.
 Identifica comportamiento actual, alcance, archivos afectados, pasos, dependencias, riesgos,
