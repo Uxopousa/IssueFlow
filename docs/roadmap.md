@@ -11,14 +11,14 @@ y actualización. La inclusión de una funcionalidad no aprueba su implementaci�
 
 ## Estado actual
 
-Corte revisado el **20 de noviembre de 2026**, sobre la base `54793e1` más los cambios
-revisados de IF-005 en el árbol de trabajo. La base de dominio, persistencia y filtrado está
-probada; **el MVP todavía no es utilizable desde la interfaz**. La raíz conserva la plantilla
-de Angular, `app.routes.ts` está vacío y ninguna pantalla consume `IssueService`.
+Corte revisado el **20 de noviembre de 2026**, sobre la base `d2c0e50` más los cambios
+revisados de IF-007 en el árbol de trabajo. El dominio, la persistencia, el filtrado y el shell
+están probados; **el MVP todavía no permite gestionar incidencias desde la interfaz**. Las
+rutas existen, pero aún no hay páginas funcionales que consuman `IssueService`.
 
-La carga inicial existe al instanciar el servicio, pero aún no está integrada en el arranque
-de la experiencia de usuario. Los errores se exponen como estado; todavía no se muestran
-mensajes ni confirmaciones en pantalla.
+El arranque inicializa `IssueService`; los placeholders de ruta no muestran incidencias ni
+sus errores. Los mensajes, confirmaciones y flujos de usuario siguen pendientes en IF-008 a
+IF-011.
 
 Los IDs `IF-001` a `IF-012` identifican entregables estables, incluidos los bloques técnicos
 necesarios para el MVP. No son prioridades ni números de plan. No se renumeran ni reutilizan;
@@ -39,7 +39,7 @@ revisarse al aprobar cada plan sin ampliar el producto.
 | IF-004 | Estado de incidencias y operaciones de negocio     | completada | IF-002, IF-003                 |
 | IF-005 | Búsqueda y filtros combinados                      | completada | IF-004                         |
 | IF-006 | Estadísticas derivadas                             | pendiente  | IF-004                         |
-| IF-007 | Estructura de navegación y arranque de la interfaz | pendiente  | IF-004                         |
+| IF-007 | Estructura de navegación y arranque de la interfaz | completada | IF-004                         |
 | IF-008 | Listado y acciones de incidencias                  | pendiente  | IF-005, IF-007                 |
 | IF-009 | Creación y edición mediante formulario             | pendiente  | IF-002, IF-004, IF-007         |
 | IF-010 | Detalle y recurso inexistente                      | pendiente  | IF-004, IF-007                 |
@@ -103,10 +103,13 @@ al valor que aporte, como indican los requisitos; no se convierte en analítica 
 ### IF-007 — Estructura de navegación y arranque de la interfaz
 
 Alcance: shell standalone, navegación base y estructura para los destinos de arquitectura §5.
-Finalización: shell utilizable con teclado e inicialización del estado al entrar en la
-aplicación, con convenciones de navegación definidas para conectar las páginas.
-Las rutas y contenidos funcionales concretos se cierran en IF-008 a IF-011, no como
-prerrequisito circular del shell. Un contenedor o placeholder no completa esas páginas.
+Finalización: shell responsive y utilizable con teclado, skip link, landmarks y traslado de
+foco al contenido tras navegar sin robarlo en la carga inicial; `IssueService` se inicializa
+una vez. Las rutas de dashboard, listado, creación, detalle y edición están conectadas a
+placeholders; la raíz lleva al dashboard. Evidencia: [shell](../src/app/app.html),
+[rutas](../src/app/app.routes.ts), [placeholder](../src/app/shared/components/route-placeholder.component.ts)
+y [pruebas](../src/app/app.spec.ts). El contenido funcional se cierra en IF-008 a IF-011;
+ninguna ruta placeholder completa esas páginas.
 
 ### IF-008 — Listado y acciones de incidencias
 
@@ -150,15 +153,19 @@ deben pasar antes del cierre global; ninguna pantalla incompleta se considera pr
 
 ## Evidencia y discrepancias del corte actual
 
-Los cinco bloques de dominio, persistencia y filtrado marcados como completados tienen código
-contrastado y revisión independiente sin hallazgos. Para este corte se ejecutaron correctamente
-**127 pruebas en cinco archivos**, lint y build. Prettier pasó en los cuatro archivos de IF-005.
-La revisión de estos bloques técnicos no acredita todavía los criterios de usuario completos.
+Los seis bloques de dominio, persistencia, filtrado y shell marcados como completados tienen
+código contrastado y revisión independiente sin hallazgos pendientes. Para este corte se
+ejecutaron correctamente **129 pruebas en cinco archivos**, lint y build. Prettier pasó en los
+ocho archivos afectados. El shell se inspeccionó en Chrome en tamaños de 1440×900 y 390×844;
+la prueba de navegación comprueba el traslado de foco al contenido. Estas evidencias no
+acreditan todavía los criterios de gestión de incidencias de usuario.
 
 `npm run format:check` presenta una deuda preexistente en 12 archivos ajenos a esta tarea.
-Los archivos técnicos completados cumplen su formato específico. Esta limitación se mantiene
-visible y no se presenta como comprobación global correcta; debe resolverse antes de IF-012
-con alcance autorizado. No implica que las funcionalidades pendientes estén bloqueadas.
+Tras formatear los archivos afectados por IF-007, el control global sigue fallando en ocho
+archivos ajenos: `accessibility/SKILL.md`, `testing/SKILL.md`, `.postcssrc.json`, `angular.json`,
+`docs/requirements.md`, `src/main.ts`, `tsconfig.app.json` y `tsconfig.spec.json`. No se
+modificaron. Esta limitación debe resolverse antes de IF-012 con alcance autorizado; no implica
+que las funcionalidades pendientes estén bloqueadas.
 
 La arquitectura describe carpetas `features/` y `shared/` como existentes, aunque todavía
 no están implementadas; su estructura sigue siendo una previsión técnica. Tampoco hay
@@ -166,12 +173,13 @@ evidencia de verificación visual, navegación real ni persistencia a través de
 
 ## Siguiente paso recomendado
 
-Planificar **IF-007, estructura de navegación y arranque de la interfaz**, para establecer
-el shell y la navegación que necesitan las páginas del MVP. IF-006, estadísticas derivadas,
-es una rama independiente y habilita IF-011; la prioridad final pertenece al usuario.
+Planificar **IF-008, listado y acciones de incidencias**: sus dependencias IF-005 e IF-007
+están completadas y permitiría hacer visible la búsqueda y los filtros ya implementados.
+IF-006, estadísticas derivadas, es una rama independiente que habilita IF-011; la prioridad
+final pertenece al usuario.
 
 No hay otra implementación autorizada en curso. La próxima acción es presentar el plan
-IF-007 y esperar aprobación; esta recomendación no la concede.
+IF-008 y esperar aprobación; esta recomendación no la concede.
 
 ## Estados y mantenimiento
 
