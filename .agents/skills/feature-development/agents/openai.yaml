@@ -1,0 +1,6 @@
+interface:
+  display_name: 'IssueFlow Feature Development'
+  short_description: 'Planificación y desarrollo con aprobación humana'
+  default_prompt: 'Usa $feature-development para gestionar esta tarea de IssueFlow.'
+policy:
+  allow_implicit_invocation: false
