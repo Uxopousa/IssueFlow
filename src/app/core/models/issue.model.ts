@@ -12,3 +12,5 @@ export interface Issue {
   createdAt: string;
   updatedAt: string;
 }
+
+export type IssueInput = Pick<Issue, 'title' | 'description' | 'category' | 'priority' | 'status'>;

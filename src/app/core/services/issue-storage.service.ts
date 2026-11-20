@@ -1,21 +1,9 @@
 import { inject, Injectable, InjectionToken } from '@angular/core';
 
 import { Issue } from '../models/issue.model';
+import { isIssueCollection } from '../models/issue-validation';
 
 type IssueStorage = Pick<Storage, 'getItem' | 'setItem'>;
-type IssueFields = Record<keyof Issue, unknown>;
-
-const REQUIRED_ISSUE_FIELDS = [
-  'id',
-  'title',
-  'description',
-  'category',
-  'priority',
-  'status',
-  'createdAt',
-  'updatedAt',
-] as const satisfies readonly (keyof Issue)[];
-
 export type IssueStorageError =
   | 'storage-unavailable'
   | 'read-failed'
@@ -100,71 +88,4 @@ export class IssueStorageService {
       return { ok: false, error: 'storage-unavailable' };
     }
   }
-}
-
-function isIssueCollection(value: unknown): value is Issue[] {
-  if (!Array.isArray(value)) {
-    return false;
-  }
-
-  const identifiers = new Set<string>();
-  for (const issue of value) {
-    if (!isIssue(issue) || identifiers.has(issue.id)) {
-      return false;
-    }
-    identifiers.add(issue.id);
-  }
-  return true;
-}
-
-function isIssue(value: unknown): value is Issue {
-  return (
-    hasOwnIssueFields(value) &&
-    hasValidIssueContent(value) &&
-    hasValidIssueClassification(value) &&
-    isSerializedDate(value.createdAt) &&
-    isSerializedDate(value.updatedAt)
-  );
-}
-
-function hasOwnIssueFields(value: unknown): value is IssueFields {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    !Array.isArray(value) &&
-    REQUIRED_ISSUE_FIELDS.every((field) => Object.hasOwn(value, field))
-  );
-}
-
-function hasValidIssueContent(value: IssueFields): boolean {
-  return (
-    typeof value.id === 'string' &&
-    value.id.trim().length > 0 &&
-    hasTextLength(value.title, 3, 100) &&
-    hasTextLength(value.description, 10, 1000) &&
-    hasTextLength(value.category, 2, 50)
-  );
-}
-
-function hasValidIssueClassification(value: IssueFields): boolean {
-  return (
-    (value.priority === 'low' || value.priority === 'medium' || value.priority === 'high') &&
-    (value.status === 'open' || value.status === 'in-progress' || value.status === 'resolved')
-  );
-}
-
-function hasTextLength(value: unknown, min: number, max: number): boolean {
-  if (typeof value !== 'string') {
-    return false;
-  }
-  const length = value.trim().length;
-  return length >= min && length <= max;
-}
-
-function isSerializedDate(value: unknown): boolean {
-  if (typeof value !== 'string') {
-    return false;
-  }
-  const date = new Date(value);
-  return Number.isFinite(date.getTime()) && date.toISOString() === value;
 }
