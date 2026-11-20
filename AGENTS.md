@@ -24,3 +24,14 @@ IssueFlow es una aplicación Angular 21 con TypeScript estricto y Tailwind CSS 4
 ## Límites del MVP
 
 No añadas backend, autenticación, roles, permisos, notificaciones ni otras funcionalidades excluidas en [`docs/requirements.md`](docs/requirements.md) sin una petición explícita y una actualización previa del alcance.
+
+## Calidad y herramientas de desarrollo
+
+- Respeta la configuración de ESLint y Prettier definida en el proyecto.
+- Ejecuta `npm run lint` después de implementar o modificar código.
+- El código debe superar ESLint sin errores antes de considerar terminada una tarea.
+- Ejecuta `npm run format:check` para comprobar que el formato es correcto.
+- No formatees automáticamente archivos que no estén relacionados con la tarea.
+- No desactives, debilites ni suprimas reglas de ESLint para ocultar problemas sin una justificación técnica.
+- Si una regla parece inadecuada para un caso concreto, explica el motivo antes de modificar la configuración.
+- Incluye los resultados de las comprobaciones en el resumen final de cada tarea.

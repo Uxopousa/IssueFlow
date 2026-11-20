@@ -88,9 +88,14 @@ El flujo esperado será:
 3. El servicio de incidencias actualiza su Signal con los datos válidos o con una colección vacía.
 4. Páginas y componentes leen Signals y renderizan el estado actual.
 5. Una acción de usuario llama a una operación del servicio.
-6. El servicio aplica la regla de negocio, actualiza el Signal y persiste el nuevo estado.
-7. Las vistas derivadas se actualizan automáticamente.
+6. El servicio valida la operación y calcula el nuevo estado.
+7. Actualiza la Signal y solicita la persistencia del nuevo estado.
+8. Si la persistencia falla, conserva el estado en memoria y expone
+   un error de persistencia que la interfaz debe comunicar.
+9. Las vistas derivadas se actualizan automáticamente.
 
+La interfaz nunca debe presentar una operación como guardada
+correctamente si la persistencia ha fallado.
 Los componentes no modificarán directamente las Signals del servicio ni mantendrán una segunda fuente de verdad.
 
 ## 5. Rutas
