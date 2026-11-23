@@ -1,59 +1,127 @@
-# Issueflow
+# IssueFlow
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.27.
+> A responsive Angular issue tracker MVP built with a human-supervised Codex subagent workflow.
 
-## Development server
+[![Build and deploy to GitHub Pages](https://github.com/Uxopousa/IssueFlow/actions/workflows/pages.yml/badge.svg?branch=main)](https://github.com/Uxopousa/IssueFlow/actions/workflows/pages.yml)
 
-To start a local development server, run:
+IssueFlow is a frontend MVP for creating, tracking, and managing issues in the
+browser. It is built with Angular and stores data locally in the current browser.
+
+> **Project status:** The frontend MVP is complete. A backend is planned for a
+> future stage; this version does not include a server, API, user accounts, or
+> synchronization between browsers or devices.
+
+## Features
+
+- Dashboard with live issue statistics.
+- Issue list with text search and combined status and priority filters.
+- Create, view, edit, resolve, and delete issues.
+- Form validation with clear field-level feedback.
+- Local persistence with visible feedback when browser storage is unavailable.
+- Responsive layouts and keyboard-accessible navigation.
+
+## AI-assisted development
+
+IssueFlow also demonstrates a human-supervised development workflow with Codex
+subagents and repository-local skills. The agents are configured in
+`.codex/agents/` with GPT-6 Luna and high reasoning effort.
+
+| Agent         | Responsibility                                                                                |
+| ------------- | --------------------------------------------------------------------------------------------- |
+| **Planner**   | Inspects the request, roadmap, requirements, and code; proposes a plan without editing files. |
+| **Developer** | Implements only an explicitly approved plan and runs the relevant checks.                     |
+| **Reviewer**  | Independently reviews the changes and reports findings without editing files.                 |
+
+The default workflow handles one feature at a time. It pauses for human approval
+after planning, then runs Developer, independent review, any accepted corrections,
+and final checks. Only after review and verification does the coordinator update
+the roadmap. An optional batch mode requires an explicit request and approved
+roadmap IDs; it processes them sequentially, limits each feature to two correction
+rounds, and stops on unresolved findings, failed checks, or scope questions. It
+never commits or pushes automatically.
+
+Local skills provide focused guidance for accessibility, Angular, clean code and
+architecture, frontend design, issue-domain rules, and testing. The
+`feature-development` skill is the entry point to the central workflow, whose
+rules live in [`ai/workflows/feature-development.md`](ai/workflows/feature-development.md).
+Shared instructions are in [`AGENTS.md`](AGENTS.md); product scope is in
+[`docs/requirements.md`](docs/requirements.md), technical structure in
+[`docs/architecture.md`](docs/architecture.md), and verified progress in
+[`docs/roadmap.md`](docs/roadmap.md).
+
+To start the workflow from Codex with the repository opened at its root, invoke
+`$feature-development` followed by the feature request. Codex presents the plan
+and waits for explicit approval before implementation. Agent and skill discovery
+depends on the Codex version and interface; the workflow documents a manual
+fallback when custom-agent delegation is unavailable.
+
+## Tech stack
+
+- Angular 21 with standalone components and TypeScript strict mode.
+- Angular Signals for reactive application state.
+- Reactive Forms for issue creation and editing.
+- Tailwind CSS 4 for styling.
+- Vitest for unit and component tests.
+
+## Run locally
+
+### Requirements
+
+- Node.js supported by Angular 21: `20.19+`, `22.12+`, or `24.x`.
+- npm `11.16.0` (the version declared by this repository).
+
+See the [Angular version compatibility table](https://angular.dev/reference/versions)
+for supported Node.js versions.
+
+### Start the app
 
 ```bash
-ng serve
+git clone https://github.com/Uxopousa/IssueFlow.git
+cd IssueFlow
+npm ci
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open [http://localhost:4200](http://localhost:4200). Press `Ctrl+C` in the
+terminal to stop the development server.
 
-## Code scaffolding
+Issues are stored in the browser's `localStorage`. They are local to that browser
+profile and are not sent to a server.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## GitHub Pages deployment
 
-```bash
-ng generate component component-name
-```
+The workflow in [`.github/workflows/pages.yml`](.github/workflows/pages.yml)
+runs formatting, lint, tests, and a production build for pull requests and pushes
+to `main`. A successful push to `main` is then deployed to GitHub Pages.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+To enable publishing, open the repository's **Settings → Pages** and set the
+build and deployment source to **GitHub Actions**. Once enabled, the demo will be
+available at [uxopousa.github.io/IssueFlow](https://uxopousa.github.io/IssueFlow/).
 
-```bash
-ng generate --help
-```
+## Project scripts
 
-## Building
+| Command                     | Description                           |
+| --------------------------- | ------------------------------------- |
+| `npm start`                 | Start the Angular development server. |
+| `npm test -- --watch=false` | Run the test suite once.              |
+| `npm run lint`              | Check the project with ESLint.        |
+| `npm run format:check`      | Check formatting with Prettier.       |
+| `npm run build`             | Create a production build in `dist/`. |
 
-To build the project run:
+## Architecture
 
-```bash
-ng build
-```
+The app is organized by responsibility:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- `src/app/core/` contains the issue model, validation, state, and local storage.
+- `src/app/features/` contains the dashboard and issue pages.
+- `src/app/shared/` contains reusable UI elements.
 
-## Running unit tests
+The UI calls Angular services for issue operations; components do not access
+`localStorage` directly. See the [architecture](docs/architecture.md) and
+[product requirements](docs/requirements.md) for more detail.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Roadmap
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The current roadmap records the completed frontend MVP. Backend work is future
+scope and has not been implemented. See [docs/roadmap.md](docs/roadmap.md) for
+the current project status.
