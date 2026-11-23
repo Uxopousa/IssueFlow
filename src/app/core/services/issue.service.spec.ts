@@ -50,11 +50,82 @@ describe('IssueService', () => {
   it('loads once without writing and exposes an initially clean state', () => {
     const instance = service();
     expect(instance.issues()).toEqual([]);
+    expect(instance.statistics()).toEqual({ total: 0, open: 0, inProgress: 0, resolved: 0 });
     expect(instance.persistenceError()).toBeNull();
     expect(instance.hasPendingChanges()).toBe(false);
     expect(service()).toBe(instance);
     expect(load).toHaveBeenCalledTimes(1);
     expect(save).not.toHaveBeenCalled();
+  });
+
+  it('exposes immutable statistics derived from the full collection', () => {
+    load.mockReturnValue({
+      ok: true,
+      issues: [
+        existing(),
+        { ...existing(), id: 'other-open' },
+        { ...existing(), id: 'in-progress', status: 'in-progress' },
+        { ...existing(), id: 'resolved', status: 'resolved' },
+      ],
+    });
+    const instance = service();
+
+    expect(instance.statistics()).toEqual({ total: 4, open: 2, inProgress: 1, resolved: 1 });
+    instance.setSearchQuery('no matching issue');
+    instance.setStatusFilter('resolved');
+    instance.setPriorityFilter('high');
+    expect(instance.filteredIssues()).toEqual([]);
+    expect(instance.statistics()).toEqual({ total: 4, open: 2, inProgress: 1, resolved: 1 });
+    expect(Object.isFrozen(instance.statistics())).toBe(true);
+    expect(Reflect.set(instance.statistics(), 'total', 0)).toBe(false);
+    expect(instance.statistics().total).toBe(4);
+  });
+
+  it('recomputes statistics after each successful issue operation', () => {
+    load.mockReturnValue({
+      ok: true,
+      issues: [
+        existing(),
+        { ...existing(), id: 'other-open' },
+        { ...existing(), id: 'in-progress', status: 'in-progress' },
+        { ...existing(), id: 'resolved', status: 'resolved' },
+      ],
+    });
+    const instance = service();
+
+    expect(instance.create(input({ status: 'in-progress' })).status).toBe('saved');
+    expect(instance.statistics()).toEqual({ total: 5, open: 2, inProgress: 2, resolved: 1 });
+
+    expect(instance.update('existing', input({ status: 'resolved' })).status).toBe('saved');
+    expect(instance.statistics()).toEqual({ total: 5, open: 1, inProgress: 2, resolved: 2 });
+
+    expect(instance.changeStatus('in-progress', 'resolved').status).toBe('saved');
+    expect(instance.statistics()).toEqual({ total: 5, open: 1, inProgress: 1, resolved: 3 });
+
+    expect(instance.delete('other-open').status).toBe('saved');
+    expect(instance.statistics()).toEqual({ total: 4, open: 0, inProgress: 1, resolved: 3 });
+  });
+
+  it('keeps statistics unchanged after rejected operations', () => {
+    load.mockReturnValue({ ok: true, issues: [existing()] });
+    const instance = service();
+    const before = instance.statistics();
+
+    expect(instance.update('missing', input()).status).toBe('rejected');
+    expect(instance.delete('missing').status).toBe('rejected');
+
+    expect(instance.statistics()).toEqual(before);
+  });
+
+  it('updates statistics for memory-only changes without clearing the storage error', () => {
+    save.mockReturnValueOnce({ ok: false, error: 'write-failed' });
+    const instance = service();
+
+    expect(instance.create(input({ status: 'resolved' })).status).toBe('memory-only');
+
+    expect(instance.statistics()).toEqual({ total: 1, open: 0, inProgress: 0, resolved: 1 });
+    expect(instance.hasPendingChanges()).toBe(true);
+    expect(instance.persistenceError()).toEqual({ phase: 'save', code: 'write-failed' });
   });
 
   it('copies and freezes loaded state and lookup results', () => {

@@ -42,6 +42,13 @@ export interface IssuePersistenceError {
   readonly code: IssueStorageError;
 }
 
+export interface IssueStatistics {
+  readonly total: number;
+  readonly open: number;
+  readonly inProgress: number;
+  readonly resolved: number;
+}
+
 type IssueState = {
   readonly issues: readonly Readonly<Issue>[];
   readonly pending: boolean;
@@ -59,6 +66,25 @@ export class IssueService {
   private readonly activeFilters = signal<IssueFilters>(DEFAULT_FILTERS);
 
   readonly issues = computed(() => this.state().issues);
+  readonly statistics = computed<IssueStatistics>(() => {
+    const issues = this.issues();
+    const counts: Record<IssueStatus, number> = {
+      open: 0,
+      'in-progress': 0,
+      resolved: 0,
+    };
+
+    for (const issue of issues) {
+      counts[issue.status] += 1;
+    }
+
+    return Object.freeze({
+      total: issues.length,
+      open: counts.open,
+      inProgress: counts['in-progress'],
+      resolved: counts.resolved,
+    });
+  });
   readonly persistenceError = computed(() => this.state().error);
   readonly hasPendingChanges = computed(() => this.state().pending);
   readonly filters = computed(() => this.activeFilters());

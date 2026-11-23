@@ -85,7 +85,7 @@ describe('App', () => {
     expect(document.activeElement).toBe(main);
   });
 
-  it('redirects the root and exposes structural placeholders for each MVP route', async () => {
+  it('redirects the root to the dashboard and preserves remaining route placeholders', async () => {
     const fixture = TestBed.createComponent(App);
     const router = TestBed.inject(Router);
     fixture.detectChanges();
@@ -95,6 +95,8 @@ describe('App', () => {
     fixture.detectChanges();
     expect(router.url).toBe('/dashboard');
     expect(fixture.nativeElement.querySelector('h1')?.textContent?.trim()).toBe('Panel de control');
+    expect(fixture.nativeElement.textContent).toContain('Estadísticas de incidencias');
+    expect(fixture.nativeElement.textContent).not.toContain('todavía no está implementada');
 
     await router.navigateByUrl('/issues');
     await fixture.whenStable();
