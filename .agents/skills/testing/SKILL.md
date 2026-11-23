@@ -1,6 +1,6 @@
 ---
 name: testing
-description: "Use when planning or writing frontend tests, Angular service tests, Signal tests, Reactive Forms tests, validation tests, edge-case tests, or Vitest tests compatible with an existing Angular configuration."
+description: 'Use when planning or writing frontend tests, Angular service tests, Signal tests, Reactive Forms tests, validation tests, edge-case tests, or Vitest tests compatible with an existing Angular configuration.'
 ---
 
 # Testing

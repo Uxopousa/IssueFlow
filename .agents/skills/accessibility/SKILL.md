@@ -1,6 +1,6 @@
 ---
 name: accessibility
-description: "Use when designing, implementing, or reviewing accessible frontend interfaces, semantic HTML, WCAG, keyboard navigation, focus management, contrast, forms, ARIA, responsive usability, or accessible error messages."
+description: 'Use when designing, implementing, or reviewing accessible frontend interfaces, semantic HTML, WCAG, keyboard navigation, focus management, contrast, forms, ARIA, responsive usability, or accessible error messages.'
 ---
 
 # Accessibility
@@ -47,12 +47,7 @@ Actívala para cualquier pantalla, componente, formulario, modal, navegación o 
 
 ```html
 <label for="title">Título</label>
-<input
-  id="title"
-  name="title"
-  aria-describedby="title-error"
-  aria-invalid="true"
->
+<input id="title" name="title" aria-describedby="title-error" aria-invalid="true" />
 <p id="title-error" role="alert">Escribe un título.</p>
 ```
 

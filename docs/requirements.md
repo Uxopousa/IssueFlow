@@ -67,16 +67,16 @@ La ausencia de datos se tratará como un listado vacío. Un fallo de lectura o e
 
 Cada incidencia tendrá la siguiente forma conceptual:
 
-| Campo | Tipo conceptual | Reglas |
-|---|---|---|
-| `id` | `string` | Obligatorio y único. Lo genera la aplicación. |
-| `title` | `string` | Obligatorio. |
-| `description` | `string` | Obligatoria. |
-| `category` | `string` | Obligatoria. |
-| `priority` | `low \| medium \| high` | Obligatoria. |
-| `status` | `open \| in-progress \| resolved` | Obligatoria. |
-| `createdAt` | fecha serializada | Obligatoria y no modificable por el usuario. |
-| `updatedAt` | fecha serializada | Obligatoria; se actualiza al modificar. |
+| Campo         | Tipo conceptual                   | Reglas                                        |
+| ------------- | --------------------------------- | --------------------------------------------- |
+| `id`          | `string`                          | Obligatorio y único. Lo genera la aplicación. |
+| `title`       | `string`                          | Obligatorio.                                  |
+| `description` | `string`                          | Obligatoria.                                  |
+| `category`    | `string`                          | Obligatoria.                                  |
+| `priority`    | `low \| medium \| high`           | Obligatoria.                                  |
+| `status`      | `open \| in-progress \| resolved` | Obligatoria.                                  |
+| `createdAt`   | fecha serializada                 | Obligatoria y no modificable por el usuario.  |
+| `updatedAt`   | fecha serializada                 | Obligatoria; se actualiza al modificar.       |
 
 ### Valores permitidos
 
