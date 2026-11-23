@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 
 import { DashboardPageComponent } from './features/dashboard/dashboard-page/dashboard-page.component';
+import { IssueDetailPageComponent } from './features/issues/pages/issue-detail-page/issue-detail-page.component';
+import { IssueFormPageComponent } from './features/issues/pages/issue-form-page/issue-form-page.component';
 import { IssueListPageComponent } from './features/issues/pages/issue-list-page/issue-list-page.component';
-import { RoutePlaceholderComponent } from './shared/components/route-placeholder.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -16,17 +17,14 @@ export const routes: Routes = [
   },
   {
     path: 'issues/new',
-    component: RoutePlaceholderComponent,
-    data: { title: 'Nueva incidencia' },
+    component: IssueFormPageComponent,
   },
   {
     path: 'issues/:id/edit',
-    component: RoutePlaceholderComponent,
-    data: { title: 'Editar incidencia' },
+    component: IssueFormPageComponent,
   },
   {
     path: 'issues/:id',
-    component: RoutePlaceholderComponent,
-    data: { title: 'Detalle de incidencia' },
+    component: IssueDetailPageComponent,
   },
 ];

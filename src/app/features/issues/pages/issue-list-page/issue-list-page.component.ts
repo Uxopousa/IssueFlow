@@ -8,7 +8,7 @@ import {
   Injector,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { isIssueStatus } from '../../../../core/models/issue-validation';
 import { Issue, IssuePriority, IssueStatus } from '../../../../core/models/issue.model';
@@ -51,6 +51,7 @@ const DATE_FORMATTER = new Intl.DateTimeFormat('es-ES', {
 export class IssueListPageComponent {
   private readonly host = inject(ElementRef).nativeElement as HTMLElement;
   private readonly injector = inject(Injector);
+  private readonly router = inject(Router);
   protected readonly issueService = inject(IssueService);
   protected readonly hasActiveFilters = computed(() => {
     const filters = this.issueService.filters();
@@ -58,7 +59,9 @@ export class IssueListPageComponent {
   });
   protected readonly statuses: readonly IssueStatus[] = ['open', 'in-progress', 'resolved'];
   protected readonly priorities: readonly IssuePriority[] = ['low', 'medium', 'high'];
-  protected readonly feedback = signal<Feedback | null>(null);
+  protected readonly feedback = signal<Feedback | null>(
+    deleteFeedback(this.router.currentNavigation()?.extras.state),
+  );
 
   protected statusLabel(status: IssueStatus): string {
     return STATUS_LABELS[status];
@@ -204,4 +207,18 @@ function operationErrorMessage(error: IssueOperationError): string {
       return 'No hay cambios pendientes para guardar.';
   }
   return 'No se pudo completar la operación.';
+}
+
+function deleteFeedback(state: Record<string, unknown> | undefined): Feedback | null {
+  const status = state?.['issueDeleteStatus'];
+  if (status === 'saved') {
+    return { kind: 'success', message: 'Incidencia eliminada y guardada.' };
+  }
+  if (status === 'memory-only') {
+    return {
+      kind: 'warning',
+      message: 'La eliminación solo está en memoria y no se guardó.',
+    };
+  }
+  return null;
 }

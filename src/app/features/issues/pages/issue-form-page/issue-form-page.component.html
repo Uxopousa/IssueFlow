@@ -1,0 +1,191 @@
+@if (isMissingIssue) {
+  <section aria-labelledby="page-title" class="max-w-2xl">
+    <p class="text-sm font-semibold uppercase tracking-wide text-rose-800">Recurso no disponible</p>
+    <h1 id="page-title" class="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+      Incidencia no encontrada
+    </h1>
+    <p class="mt-4 text-base leading-7 text-slate-700">
+      Puede que la incidencia se haya eliminado o que la dirección no sea válida.
+    </p>
+    <a
+      class="mt-6 inline-flex min-h-11 items-center justify-center rounded-md bg-indigo-700 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+      routerLink="/issues"
+    >
+      Volver al listado
+    </a>
+  </section>
+} @else {
+  <section aria-labelledby="page-title" class="mx-auto max-w-3xl">
+    <header>
+      <p class="text-sm font-semibold uppercase tracking-wide text-indigo-800">
+        Gestión de incidencias
+      </p>
+      <h1 id="page-title" class="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+        {{ pageTitle }}
+      </h1>
+      <p class="mt-3 max-w-prose text-base leading-7 text-slate-700">
+        Completa los campos para {{ isEditing ? 'actualizar' : 'crear' }} la incidencia.
+      </p>
+    </header>
+
+    @if (feedback(); as notice) {
+      <p
+        class="mt-6 rounded-md border px-4 py-3 text-sm"
+        [class.border-emerald-300]="notice.kind === 'success'"
+        [class.bg-emerald-50]="notice.kind === 'success'"
+        [class.text-emerald-950]="notice.kind === 'success'"
+        [class.border-amber-300]="notice.kind === 'warning'"
+        [class.bg-amber-50]="notice.kind === 'warning'"
+        [class.text-amber-950]="notice.kind === 'warning'"
+        [class.border-rose-300]="notice.kind === 'error'"
+        [class.bg-rose-50]="notice.kind === 'error'"
+        [class.text-rose-950]="notice.kind === 'error'"
+        [attr.role]="notice.kind === 'error' ? 'alert' : 'status'"
+        [attr.aria-live]="notice.kind === 'error' ? 'assertive' : 'polite'"
+      >
+        {{ notice.message }}
+      </p>
+    }
+
+    <form
+      class="mt-8 grid gap-6 rounded-lg border border-slate-200 bg-white p-4 sm:p-6"
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      novalidate
+    >
+      @if (submitted() && form.invalid) {
+        <p
+          class="rounded-md border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-950"
+          role="alert"
+        >
+          Revisa los campos indicados antes de guardar.
+        </p>
+      }
+
+      <div>
+        <label class="mb-1.5 block text-sm font-semibold text-slate-800" for="issue-title">
+          Título <span aria-hidden="true">*</span>
+        </label>
+        <p id="title-hint" class="mb-2 text-sm text-slate-600">Entre 3 y 100 caracteres.</p>
+        <input
+          class="min-h-11 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          id="issue-title"
+          type="text"
+          autocomplete="off"
+          required
+          maxlength="100"
+          formControlName="title"
+          [attr.aria-describedby]="hasError('title') ? 'title-hint title-error' : 'title-hint'"
+          [attr.aria-invalid]="hasError('title')"
+        />
+        @if (hasError('title')) {
+          <p id="title-error" class="mt-1.5 text-sm font-medium text-rose-800">
+            {{ fieldErrorMessage('title') }}
+          </p>
+        }
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-semibold text-slate-800" for="issue-description">
+          Descripción <span aria-hidden="true">*</span>
+        </label>
+        <p id="description-hint" class="mb-2 text-sm text-slate-600">
+          Entre 10 y 1.000 caracteres.
+        </p>
+        <textarea
+          class="min-h-32 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          id="issue-description"
+          rows="5"
+          required
+          maxlength="1000"
+          formControlName="description"
+          [attr.aria-describedby]="
+            hasError('description') ? 'description-hint description-error' : 'description-hint'
+          "
+          [attr.aria-invalid]="hasError('description')"
+        ></textarea>
+        @if (hasError('description')) {
+          <p id="description-error" class="mt-1.5 text-sm font-medium text-rose-800">
+            {{ fieldErrorMessage('description') }}
+          </p>
+        }
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-sm font-semibold text-slate-800" for="issue-category">
+          Categoría <span aria-hidden="true">*</span>
+        </label>
+        <p id="category-hint" class="mb-2 text-sm text-slate-600">Entre 2 y 50 caracteres.</p>
+        <input
+          class="min-h-11 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          id="issue-category"
+          type="text"
+          autocomplete="off"
+          required
+          maxlength="50"
+          formControlName="category"
+          [attr.aria-describedby]="
+            hasError('category') ? 'category-hint category-error' : 'category-hint'
+          "
+          [attr.aria-invalid]="hasError('category')"
+        />
+        @if (hasError('category')) {
+          <p id="category-error" class="mt-1.5 text-sm font-medium text-rose-800">
+            {{ fieldErrorMessage('category') }}
+          </p>
+        }
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2">
+        <div>
+          <label class="mb-1.5 block text-sm font-semibold text-slate-800" for="issue-priority">
+            Prioridad
+          </label>
+          <select
+            class="min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+            id="issue-priority"
+            formControlName="priority"
+          >
+            <option value="low">Baja</option>
+            <option value="medium">Media</option>
+            <option value="high">Alta</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="mb-1.5 block text-sm font-semibold text-slate-800" for="issue-status">
+            Estado
+          </label>
+          <select
+            class="min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+            id="issue-status"
+            formControlName="status"
+          >
+            <option value="open">Abierta</option>
+            <option value="in-progress">En progreso</option>
+            <option value="resolved">Resuelta</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end">
+        <a
+          class="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          routerLink="/issues"
+        >
+          {{
+            feedback()?.kind === 'success' || feedback()?.kind === 'warning'
+              ? 'Volver al listado'
+              : 'Cancelar'
+          }}
+        </a>
+        <button
+          class="inline-flex min-h-11 items-center justify-center rounded-md bg-indigo-700 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+          type="submit"
+        >
+          {{ isEditing ? 'Guardar cambios' : 'Crear incidencia' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}

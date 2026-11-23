@@ -13,13 +13,15 @@ y actualización. La inclusión de una funcionalidad no aprueba su implementaci�
 
 Corte revisado el **23 de noviembre de 2026**. El lote B1 se inició sobre `5e14005`; IF-008
 está incluido en `42bf9a3`. IF-006 e IF-011 se implementaron y verificaron dentro del lote,
-con evidencia en este registro. El dominio, la persistencia, el filtrado, el shell, el listado,
-las estadísticas y el dashboard tienen evidencia; **el MVP aún no completa el flujo de gestión
-de incidencias**. Crear y editar y el detalle siguen pendientes.
+con evidencia en este registro. En el lote B2 aprobado, IF-009 e IF-010 superaron la revisión
+independiente y las comprobaciones el 23 de noviembre; sus cambios siguen en el árbol de trabajo
+sin commit. El dominio, la persistencia, el filtrado, el shell, el listado, la creación, la
+edición, las estadísticas, el dashboard y el detalle tienen evidencia; **el MVP aún requiere
+la verificación integrada IF-012**.
 
 El arranque inicializa `IssueService`. El listado comunica el resultado de las operaciones y
-el dashboard presenta estadísticas y estado de almacenamiento. Creación, edición y detalle
-siguen pendientes.
+el dashboard presenta estadísticas y estado de almacenamiento. Creación, edición y detalle ya
+son funcionales. Queda pendiente comprobar el flujo completo en IF-012.
 
 Los IDs `IF-001` a `IF-012` identifican entregables estables, incluidos los bloques técnicos
 necesarios para el MVP. No son prioridades ni números de plan. No se renumeran ni reutilizan;
@@ -42,8 +44,8 @@ revisarse al aprobar cada plan sin ampliar el producto.
 | IF-006 | Estadísticas derivadas                             | completada | IF-004                         |
 | IF-007 | Estructura de navegación y arranque de la interfaz | completada | IF-004                         |
 | IF-008 | Listado y acciones de incidencias                  | completada | IF-005, IF-007                 |
-| IF-009 | Creación y edición mediante formulario             | pendiente  | IF-002, IF-004, IF-007         |
-| IF-010 | Detalle y recurso inexistente                      | pendiente  | IF-004, IF-007                 |
+| IF-009 | Creación y edición mediante formulario             | completada | IF-002, IF-004, IF-007         |
+| IF-010 | Detalle y recurso inexistente                      | completada | IF-004, IF-007                 |
 | IF-011 | Dashboard                                          | completada | IF-006, IF-007                 |
 | IF-012 | Verificación integrada y cierre del MVP            | pendiente  | IF-008, IF-009, IF-010, IF-011 |
 
@@ -127,8 +129,9 @@ coincidencias permite limpiar criterios. El feedback distingue guardado, memoria
 y rechazo. Tras eliminar, el foco va a un elemento lógico. Evidencia: [página](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.ts),
 [template](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.html)
 y [pruebas](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.spec.ts).
-Los enlaces a creación, edición y detalle todavía llevan a placeholders; este entregable no
-completa IF-009 ni IF-010. Teclado y responsive se verifican en este flujo.
+IF-008 incluyó enlaces a los placeholders de creación, edición y detalle, pero no completaba por
+sí mismo IF-009 ni IF-010. IF-009 sustituyó los placeholders de creación y edición; IF-010
+sustituyó el de detalle. Teclado y responsive se verifican en este flujo.
 
 ### IF-009 — Creación y edición mediante formulario
 
@@ -137,6 +140,15 @@ Alcance: Reactive Forms tipado y formulario compartido para los campos editables
 envío inválido bloqueado, metadatos protegidos y resultado reflejado en las vistas que ya
 existan. Edición de recurso inexistente con salida al listado. No se anuncia guardado
 cuando el cambio solo permanece en memoria; controles etiquetados y utilizables con teclado.
+Evidencia: página y formulario compartidos en
+[IssueFormPageComponent](../src/app/features/issues/pages/issue-form-page/issue-form-page.component.ts),
+[template](../src/app/features/issues/pages/issue-form-page/issue-form-page.component.html),
+[pruebas](../src/app/features/issues/pages/issue-form-page/issue-form-page.component.spec.ts)
+y [rutas](../src/app/app.routes.ts). La revisión independiente detectó un hallazgo medio sobre
+la visibilidad inmediata tras crear; se corrigió y re-revisó sin hallazgos. La suite completa
+pasó con **156 tests en ocho archivos**, lint, `format:check`, build y
+`git diff --check`. Verificado en el árbol de trabajo, todavía sin commit; no hubo inspección
+visual manual en navegador.
 
 ### IF-010 — Detalle y recurso inexistente
 
@@ -144,6 +156,15 @@ Alcance: información completa, edición, eliminación confirmada y vuelta al li
 (requisitos §2.4). Finalización: identificadores inexistentes o eliminados muestran error
 y salida útil; acciones coherentes con el servicio y feedback de errores, con teclado y
 responsive. La eliminación actualiza el estado compartido y abandona el recurso eliminado.
+Evidencia: [página de detalle](../src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.ts),
+[template](../src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.html),
+[pruebas](../src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.spec.ts),
+[rutas e integración](../src/app/app.routes.ts) y aviso del resultado al volver al listado en
+[IssueListPageComponent](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.ts).
+La revisión detectó un defecto de parámetro al reutilizar la ruta; se corrigió con `toSignal` y
+se re-revisó sin hallazgos. La verificación integrada pasó con **165 tests en nueve archivos**,
+lint, `format:check`, build y `git diff --check`. Cambios aún sin commit; sin inspección visual
+manual en navegador.
 
 ### IF-011 — Dashboard
 
@@ -169,39 +190,39 @@ deben pasar antes del cierre global; ninguna pantalla incompleta se considera pr
 
 ## Evidencia y discrepancias del corte actual
 
-Los nueve bloques de dominio, persistencia, filtrado, shell, listado, estadísticas y dashboard
-marcados como completados tienen código contrastado y revisión independiente sin hallazgos
-pendientes. En IF-006, la prueba focalizada obtuvo 38 tests y la suite completa, antes de IF-011,
+Los once bloques de dominio, persistencia, filtrado, shell, listado, creación, edición, detalle,
+estadísticas y dashboard marcados como completados tienen código contrastado y revisión
+independiente sin hallazgos pendientes. En IF-006, la prueba focalizada obtuvo 38 tests y la suite completa, antes de IF-011,
 143 tests en seis archivos; lint y build pasaron. En IF-011, la suite completa pasó con **148 tests
 en siete archivos**, lint y build pasaron. Prettier pasó en todos los archivos modificados y
-nuevos. `npm run format:check` global sigue fallando en los ocho archivos ajenos enumerados abajo;
-se registra como limitación preexistente, no como control superado. Esta excepción no permite
-cerrar IF-012 con el fallo global pendiente. El shell y el listado vacío se inspeccionaron en
-Chrome a 1440×900 y 390×844; el dashboard vacío también se comprobó visualmente a ambos tamaños.
-Las pruebas de IF-008 verifican filtros, acciones, errores y gestión de foco; la prueba del shell
-verifica el foco al navegar. Estas evidencias no acreditan todavía la creación, edición ni detalle.
+nuevos. Después, el commit `f43df95` formateó los ocho archivos que aún fallaban en el control
+global. `npm run format:check` pasó y se volvieron a verificar lint, las 148 pruebas y build. El
+shell y el listado vacío se inspeccionaron en Chrome a 1440×900 y 390×844; el dashboard vacío
+también se comprobó visualmente a ambos tamaños. Las pruebas de IF-008 verifican filtros,
+acciones, errores y gestión de foco; la prueba del shell verifica el foco al navegar. La creación,
+edición y detalle se verificaron en IF-009 e IF-010.
 
 Al inicio de IF-007, `npm run format:check` fallaba en 12 archivos. Al formatear los dos
 archivos afectados por esa tarea, el fallo global se redujo a ocho archivos ajenos; el control
 ejecutado el 23 de noviembre reprodujo esos mismos fallos:
 `.agents/skills/accessibility/SKILL.md`, `.agents/skills/testing/SKILL.md`, `.postcssrc.json`,
 `angular.json`, `docs/requirements.md`, `src/main.ts`, `tsconfig.app.json` y `tsconfig.spec.json`.
-No se modificaron. Esta limitación debe resolverse antes de IF-012 con alcance autorizado; no
-implica que las funcionalidades pendientes estén bloqueadas.
+El 23 de noviembre, Prettier se aplicó a esos ocho archivos en el commit `f43df95`, sin cambios
+funcionales; el control global pasó después. La discrepancia documental queda resuelta y no
+bloquea IF-012.
 
 La arquitectura define `features/` y `shared/` como estructura del MVP. Ya existen las páginas
-de listado y dashboard en `features/`; el placeholder compartido sigue utilizándose para creación,
-edición y detalle. El estado actual no acredita todavía todos los flujos de navegación funcional
-ni la persistencia completa desde la interfaz.
+de listado, creación/edición, detalle y dashboard en `features/`. IF-012 verificará la persistencia
+y los criterios de aceptación de forma integrada.
 
 ## Siguiente paso recomendado
 
-Planificar **IF-009, creación y edición mediante formulario**: IF-007 aporta el shell e IF-008
-ya ofrece los accesos y refleja los resultados de esas operaciones. IF-009, IF-010 e IF-012
-siguen pendientes y requieren su propio plan y aprobación explícita.
+Planificar **IF-012, verificación integrada y cierre del MVP**. IF-009 e IF-010 superaron sus
+revisiones y comprobaciones, pero el lote B2 no autoriza iniciar IF-012; requiere un plan propio
+y aprobación explícita.
 
-El lote B1 terminó con IF-006 e IF-011 verificadas. No hay otra implementación autorizada en
-curso; la recomendación de IF-009 no constituye aprobación para iniciarla.
+El lote B1 terminó con IF-006 e IF-011 verificadas. El lote B2 autoriza únicamente IF-009 e
+IF-010 en ese orden; no autoriza iniciar IF-012 ni otras funcionalidades.
 
 ## Estados y mantenimiento
 
