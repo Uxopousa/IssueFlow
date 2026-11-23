@@ -14,14 +14,17 @@ y actualización. La inclusión de una funcionalidad no aprueba su implementaci�
 Corte revisado el **23 de noviembre de 2026**. El lote B1 se inició sobre `5e14005`; IF-008
 está incluido en `42bf9a3`. IF-006 e IF-011 se implementaron y verificaron dentro del lote,
 con evidencia en este registro. En el lote B2 aprobado, IF-009 e IF-010 superaron la revisión
-independiente y las comprobaciones el 23 de noviembre; sus cambios siguen en el árbol de trabajo
-sin commit. El dominio, la persistencia, el filtrado, el shell, el listado, la creación, la
-edición, las estadísticas, el dashboard y el detalle tienen evidencia; **el MVP aún requiere
-la verificación integrada IF-012**.
+independiente y las comprobaciones el 23 de noviembre; sus cambios se incluyeron en `04e3628`.
+Además de las pruebas automatizadas, el flujo de creación, validación, edición, detalle,
+eliminación, persistencia y estados de error se verificó en Chrome a 390×844 y 1440×900. IF-012
+completó técnicamente la verificación integrada el 23 de noviembre. La revisión independiente
+no encontró hallazgos y pasaron las comprobaciones pertinentes. Este estado registra evidencia
+técnica; no representa una aceptación humana adicional del producto.
 
 El arranque inicializa `IssueService`. El listado comunica el resultado de las operaciones y
-el dashboard presenta estadísticas y estado de almacenamiento. Creación, edición y detalle ya
-son funcionales. Queda pendiente comprobar el flujo completo en IF-012.
+el dashboard presenta estadísticas y estado de almacenamiento. Creación, edición, detalle y el
+flujo integrado tienen evidencia funcional. No quedan entregables pendientes dentro del MVP;
+cualquier ampliación requiere una petición y actualización de alcance explícitas.
 
 Los IDs `IF-001` a `IF-012` identifican entregables estables, incluidos los bloques técnicos
 necesarios para el MVP. No son prioridades ni números de plan. No se renumeran ni reutilizan;
@@ -47,7 +50,7 @@ revisarse al aprobar cada plan sin ampliar el producto.
 | IF-009 | Creación y edición mediante formulario             | completada | IF-002, IF-004, IF-007         |
 | IF-010 | Detalle y recurso inexistente                      | completada | IF-004, IF-007                 |
 | IF-011 | Dashboard                                          | completada | IF-006, IF-007                 |
-| IF-012 | Verificación integrada y cierre del MVP            | pendiente  | IF-008, IF-009, IF-010, IF-011 |
+| IF-012 | Verificación integrada y cierre del MVP            | completada | IF-008, IF-009, IF-010, IF-011 |
 
 ### IF-001 — Modelo de incidencia
 
@@ -72,7 +75,8 @@ de negocio. Finalización: ausencia como colección vacía, datos inválidos rec
 errores explícitos y ninguna reparación o sobrescritura durante la lectura; una escritura
 fallida no comunica éxito. Evidencia: [servicio](../src/app/core/services/issue-storage.service.ts)
 y [pruebas](../src/app/core/services/issue-storage.service.spec.ts).
-El flujo visible de persistencia sigue pendiente en las pantallas y en IF-012.
+El estado visible de persistencia está integrado en las pantallas; su comportamiento conjunto
+con el flujo completo se comprobó en IF-012.
 
 ### IF-004 — Estado de incidencias y operaciones de negocio
 
@@ -145,10 +149,13 @@ Evidencia: página y formulario compartidos en
 [template](../src/app/features/issues/pages/issue-form-page/issue-form-page.component.html),
 [pruebas](../src/app/features/issues/pages/issue-form-page/issue-form-page.component.spec.ts)
 y [rutas](../src/app/app.routes.ts). La revisión independiente detectó un hallazgo medio sobre
-la visibilidad inmediata tras crear; se corrigió y re-revisó sin hallazgos. La suite completa
-pasó con **156 tests en ocho archivos**, lint, `format:check`, build y
-`git diff --check`. Verificado en el árbol de trabajo, todavía sin commit; no hubo inspección
-visual manual en navegador.
+la visibilidad inmediata tras crear; se corrigió y re-revisó sin hallazgos. En la ejecución de
+IF-009 pasaron 156 tests en ocho archivos, lint, `format:check`, build y `git diff --check`.
+Después, la suite integrada de B2 pasó con 165 tests en nueve archivos y las mismas
+comprobaciones. En Chrome se verificaron creación válida e inválida, edición, feedback de
+persistencia guardada y solo en memoria, y vistas a 390×844 y 1440×900. La simulación de solo
+memoria hizo fallar `localStorage.setItem`; no simuló llenar la cuota real del navegador.
+Cambios incluidos en `04e3628`.
 
 ### IF-010 — Detalle y recurso inexistente
 
@@ -163,8 +170,10 @@ Evidencia: [página de detalle](../src/app/features/issues/pages/issue-detail-pa
 [IssueListPageComponent](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.ts).
 La revisión detectó un defecto de parámetro al reutilizar la ruta; se corrigió con `toSignal` y
 se re-revisó sin hallazgos. La verificación integrada pasó con **165 tests en nueve archivos**,
-lint, `format:check`, build y `git diff --check`. Cambios aún sin commit; sin inspección visual
-manual en navegador.
+lint, `format:check`, build y `git diff --check`. En Chrome se comprobaron los datos y fechas,
+el identificador inexistente, la cancelación y confirmación de eliminación, y vistas a 390×844
+y 1440×900. La comprobación responsive fue emulación de viewport, no un dispositivo físico.
+Cambios incluidos en `04e3628`.
 
 ### IF-011 — Dashboard
 
@@ -188,11 +197,24 @@ manual o automatizada según las herramientas disponibles. Registrar cualquier e
 verificado; no exige instalar un runner E2E nuevo. Las comprobaciones de calidad requeridas
 deben pasar antes del cierre global; ninguna pantalla incompleta se considera producto terminado.
 
+Evidencia: en Chrome pasaron 24 aserciones de flujo integrado y siete comprobaciones de errores
+de almacenamiento. Se verificaron creación válida e inválida, persistencia tras recarga,
+edición y metadatos, detalle, cambio de estado, estadísticas, búsqueda y filtros combinados,
+vacíos, eliminación cancelada y confirmada, recurso eliminado, navegación por teclado, skip link
+y foco. Se revisaron listado, formulario, detalle y dashboard en viewports de 390×844 y 1440×900,
+sin desbordamiento horizontal. Los fallos de lectura y datos corruptos no sobrescribieron datos;
+la escritura fallida se comunicó como solo en memoria y la recarga restauró el último dato
+persistido. La revisión independiente no encontró hallazgos. Pasaron `npm run lint`,
+`npm run format:check`, `npm test -- --watch=false` (165 pruebas en nueve archivos),
+`npm run build` y `git diff --check`. Limitaciones: los viewports fueron emulados, el fallo de
+escritura se simuló lanzando una excepción desde `Storage.setItem`, y el contraste se revisó
+visualmente sin escáner ni lector de pantalla. No se usó dispositivo físico ni runner E2E nuevo.
+
 ## Evidencia y discrepancias del corte actual
 
-Los once bloques de dominio, persistencia, filtrado, shell, listado, creación, edición, detalle,
-estadísticas y dashboard marcados como completados tienen código contrastado y revisión
-independiente sin hallazgos pendientes. En IF-006, la prueba focalizada obtuvo 38 tests y la suite completa, antes de IF-011,
+Los bloques IF-001 a IF-011 de dominio, persistencia, filtrado, shell, listado, creación,
+edición, detalle, estadísticas y dashboard marcados como completados tienen código contrastado
+y revisión independiente sin hallazgos pendientes. En IF-006, la prueba focalizada obtuvo 38 tests y la suite completa, antes de IF-011,
 143 tests en seis archivos; lint y build pasaron. En IF-011, la suite completa pasó con **148 tests
 en siete archivos**, lint y build pasaron. Prettier pasó en todos los archivos modificados y
 nuevos. Después, el commit `f43df95` formateó los ocho archivos que aún fallaban en el control
@@ -200,7 +222,10 @@ global. `npm run format:check` pasó y se volvieron a verificar lint, las 148 pr
 shell y el listado vacío se inspeccionaron en Chrome a 1440×900 y 390×844; el dashboard vacío
 también se comprobó visualmente a ambos tamaños. Las pruebas de IF-008 verifican filtros,
 acciones, errores y gestión de foco; la prueba del shell verifica el foco al navegar. La creación,
-edición y detalle se verificaron en IF-009 e IF-010.
+edición, detalle, validación, persistencia, eliminación e identificador inexistente se verificaron
+manualmente en Chrome durante B2, en viewport móvil y de escritorio. IF-012 completó después
+la verificación conjunta de los doce criterios de aceptación; su evidencia y limitaciones están
+registradas en su sección.
 
 Al inicio de IF-007, `npm run format:check` fallaba en 12 archivos. Al formatear los dos
 archivos afectados por esa tarea, el fallo global se redujo a ocho archivos ajenos; el control
@@ -208,21 +233,22 @@ ejecutado el 23 de noviembre reprodujo esos mismos fallos:
 `.agents/skills/accessibility/SKILL.md`, `.agents/skills/testing/SKILL.md`, `.postcssrc.json`,
 `angular.json`, `docs/requirements.md`, `src/main.ts`, `tsconfig.app.json` y `tsconfig.spec.json`.
 El 23 de noviembre, Prettier se aplicó a esos ocho archivos en el commit `f43df95`, sin cambios
-funcionales; el control global pasó después. La discrepancia documental queda resuelta y no
-bloquea IF-012.
+funcionales; el control global pasó después. La discrepancia documental quedó resuelta antes de
+IF-012.
 
 La arquitectura define `features/` y `shared/` como estructura del MVP. Ya existen las páginas
-de listado, creación/edición, detalle y dashboard en `features/`. IF-012 verificará la persistencia
+de listado, creación/edición, detalle y dashboard en `features/`; IF-012 verificó la persistencia
 y los criterios de aceptación de forma integrada.
 
 ## Siguiente paso recomendado
 
-Planificar **IF-012, verificación integrada y cierre del MVP**. IF-009 e IF-010 superaron sus
-revisiones y comprobaciones, pero el lote B2 no autoriza iniciar IF-012; requiere un plan propio
-y aprobación explícita.
+IF-012 está técnicamente completada tras revisión y comprobaciones. El MVP no tiene
+funcionalidades pendientes identificadas en el alcance actual. Una siguiente etapa requiere
+que el usuario indique si acepta el resultado del MVP o solicite una ampliación de alcance;
+las ampliaciones no se infieren de esta finalización.
 
-El lote B1 terminó con IF-006 e IF-011 verificadas. El lote B2 autoriza únicamente IF-009 e
-IF-010 en ese orden; no autoriza iniciar IF-012 ni otras funcionalidades.
+El lote B1 terminó con IF-006 e IF-011 verificadas. El lote B2 terminó con IF-009 e IF-010
+verificadas e incluidas en `04e3628`. IF-012 verificó el flujo conjunto el 23 de noviembre.
 
 ## Estados y mantenimiento
 
