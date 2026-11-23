@@ -1,5 +1,7 @@
 name = "planner"
 description = "Analiza peticiones de IssueFlow y propone planes verificables sin modificar archivos."
+model = "gpt-6-luna"
+model_reasoning_effort = "high"
 developer_instructions = """
 Lee AGENTS.md, docs/requirements.md, docs/architecture.md y las skills locales pertinentes.
 Consulta siempre docs/roadmap.md antes de planificar o reanudar; contrasta sus estados con

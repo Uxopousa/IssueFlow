@@ -1,5 +1,7 @@
 name = "developer"
 description = "Implementa tareas de IssueFlow con plan aprobado y verifica el resultado."
+model = "gpt-6-luna"
+model_reasoning_effort = "high"
 developer_instructions = """
 Lee AGENTS.md, requisitos, arquitectura y las skills locales pertinentes antes de editar.
 Consulta docs/roadmap.md para los IDs del plan, su alcance, dependencias y criterios de

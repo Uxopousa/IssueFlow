@@ -12,18 +12,23 @@ Lee `AGENTS.md` y `ai/workflows/feature-development.md` desde la raíz del repos
 El workflow es la fuente única del proceso; síguelo sin sustituirlo por un resumen.
 Si falta o no puede leerse, informa del bloqueo y no implementes.
 
-Actúa como coordinador: delega secuencialmente en `planner`, `developer` y `reviewer`
-cuando el cliente permita cargar esos agentes. Aplica la alternativa manual documentada
-si no están disponibles. Reutiliza las seis skills existentes según el trabajo afectado.
+Actúa como coordinador: el modo predeterminado cubre una funcionalidad. Activa el modo batch
+solo ante una solicitud explícita del usuario; enumerar varios IDs no lo activa. Para batch,
+aplica el plan conjunto, la aprobación única y los límites de ejecución definidos en el
+workflow. Delega secuencialmente en `planner`, `developer` y `reviewer` cuando el cliente
+permita cargar esos agentes. Aplica la alternativa manual documentada si no están disponibles.
+Reutiliza las seis skills existentes según el trabajo afectado.
 
 Consulta siempre `docs/roadmap.md` al iniciar o reanudar y contrástalo con código, pruebas
 y Git antes de recomendar una funcionalidad. Vincula el plan a sus IDs y criterios; no
 copies su lista de pendientes en esta skill. Si falta el roadmap o discrepa del código,
-informa y propone reconciliarlo antes de depender de un cierre dudoso.
+informa y aplica las reglas del workflow para reconciliarlo antes de depender de un cierre
+dudoso; en batch, esa reconciliación es previa a planificar el lote.
 
 Deja al coordinador la propuesta y actualización posterior a la revisión, según el workflow.
 No adelantes estados ni consideres la recomendación del roadmap una aprobación del usuario.
 
-Al reanudar, recupera el plan concreto, su aprobación humana y los cambios pendientes.
-Si no puedes identificar la aprobación, vuelve a la fase de presentación del plan.
-Invocar esta skill no aprueba ningún plan ni autoriza a saltar la espera del usuario.
+Al reanudar, recupera el plan concreto, su aprobación humana y los cambios pendientes; en batch,
+recupera además los IDs autorizados y el último resultado verificado. Si no puedes identificar
+la aprobación o el punto de continuación, vuelve a presentar el plan. Invocar esta skill no
+aprueba ningún plan ni autoriza a saltar la espera del usuario.

@@ -12,6 +12,19 @@ analizarla. El coordinador consulta el roadmap e identifica cambios existentes s
 las capacidades reales del cliente antes de delegar. No instala herramientas ni cambia
 configuración para habilitar delegación automáticamente.
 
+El modo predeterminado es una sola funcionalidad. Usa el modo batch únicamente cuando el
+usuario lo solicite explícitamente; una petición que enumere varios IDs no basta para
+activarlo. Batch admite solo IDs existentes del roadmap y nunca amplía requisitos, reglas de
+dominio ni el alcance aprobado.
+
+Antes de planificar o iniciar un batch, reconcilia `docs/roadmap.md` con Git, código y pruebas.
+Corrige directamente discrepancias documentales objetivas cuando haya evidencia verificable,
+sin cambiar el alcance ni el significado de los estados. Si resolver una discrepancia requiere
+interpretación de producto, cambio de criterios, dependencias o prioridades, detente y consulta
+al usuario antes de iniciar el lote. Esta reconciliación previa no declara funcionalidades
+completadas: su estado solo se determina con el ciclo de revisión y comprobaciones definido
+más abajo.
+
 Selecciona las skills existentes por responsabilidad:
 
 - `angular-guidelines`: componentes, servicios, Signals, formularios y rutas.
@@ -79,6 +92,54 @@ Salida completa: criterios de aceptación satisfechos, revisión independiente t
 sin hallazgos aceptados pendientes y comprobaciones aplicables correctas. Si existe una
 limitación o fallo pendiente, informa del estado parcial o bloqueado; no declares éxito total.
 
+## Ejecución opcional por lotes
+
+Activa esta sección solo ante una solicitud explícita de modo batch. El usuario debe indicar
+los IDs del roadmap que autoriza incluir; el coordinador no añade el siguiente paso sugerido
+ni otros IDs por inferencia. La modalidad de una sola funcionalidad conserva sin cambios su
+aprobación y secuencia actuales.
+
+1. **Plan conjunto.** Tras la reconciliación previa del roadmap, Planner contrasta cada ID con
+   requisitos, arquitectura, código, pruebas y Git; verifica dependencias y propone un orden
+   que las satisfaga. El plan enumera alcance, exclusiones, criterios, archivos, riesgos,
+   comprobaciones y dependencias por ID, además de los puntos de parada. No se inicia si hay
+   dependencias no satisfechas fuera del lote, ambigüedad o discrepancias que requieran una
+   decisión de alcance.
+2. **Una aprobación para el lote.** El coordinador presenta el plan conjunto y espera una
+   aprobación humana explícita referida a esa versión y a todos sus IDs, orden, alcance y
+   criterios. Esa aprobación permite implementar únicamente el lote aprobado; no autoriza
+   cambios de requisitos, criterios, dependencias, orden sustancial ni funcionalidades nuevas.
+   Un cambio material exige detenerse, presentar el plan actualizado y obtener nueva aprobación.
+3. **Ciclo secuencial por ID.** Para cada funcionalidad, en el orden aprobado, ejecuta las
+   fases Developer → Reviewer independiente → correcciones aceptadas → comprobaciones finales
+   de las fases 4 a 7. El Reviewer contrasta el incremento actual con los criterios de ese ID,
+   considera el estado acumulado del lote y reporta hallazgos con evidencia. Solo el coordinador
+   declara que ese ID superó la verificación cuando todos sus criterios, revisión y controles
+   pertinentes están satisfechos. Después registra en el roadmap el resultado comprobado y
+   reconcilia su referencia con el estado real de Git, distinguiendo cambios del árbol de
+   trabajo de cambios confirmados. No hace commits.
+4. **Correcciones acotadas.** Se permiten como máximo dos rondas de corrección por ID; una
+   ronda incluye aplicar las correcciones aceptadas y pedir al Reviewer que las vuelva a
+   inspeccionar. Detente antes si una ronda no progresa, persiste el mismo fallo, hay desacuerdo,
+   queda un hallazgo relevante pendiente o hace falta una decisión humana. No se reinicia el
+   contador ni se continúa con el siguiente ID para eludir un bloqueo.
+5. **Regla para continuar.** Inicia el siguiente ID solo si el anterior superó revisión y
+   comprobaciones, no conserva hallazgos relevantes pendientes y sus cambios no dejan
+   dependencias del siguiente ID sin satisfacer. No basta con que compile. Ante cualquier
+   bloqueo, detén el lote; conserva resultados verificados anteriores, registra el ID bloqueado
+   con causa y condición de salida, y no inicies los IDs restantes.
+6. **Verificación y aceptación humana.** La aprobación del plan autoriza el trabajo previsto,
+   pero no equivale a aceptar sus resultados. `completada` conserva su significado actual en el
+   roadmap: criterios satisfechos, revisión independiente y comprobaciones acreditadas; no
+   representa aceptación del producto por parte del usuario. Informa por separado la
+   verificación de cada ID y cualquier aceptación humana comunicada; si no se comunicó,
+   indícala como pendiente de confirmación. No añadas estados nuevos al roadmap para
+   representar esa aceptación.
+7. **Informe del lote.** Al terminar o detenerse, informa por ID qué quedó verificado,
+   bloqueado o sin iniciar; resume criterios, hallazgos y limitaciones; enumera comandos de
+   comprobación y sus resultados, decisiones pendientes, estado de Git y cambios del roadmap.
+   No hagas merge, push ni despliegue. No presentes un lote detenido como éxito total.
+
 ## Actualización del roadmap
 
 El coordinador mantiene `docs/roadmap.md`; Planner y Reviewer entregan propuestas en el chat
@@ -132,7 +193,10 @@ real y último corte persistido. Terminar una funcionalidad no autoriza iniciar 
 - Falta de herramientas, permisos o acceso: usa una alternativa disponible que respete las
   restricciones; si no permite verificar el resultado, explica qué queda sin comprobar.
 - Interrupción: al reanudar, consulta el roadmap, verifica el estado de archivos y la vigencia del plan aprobado.
-  Un plan modificado sustancialmente vuelve a presentación y aprobación humana.
+  En batch, reconstruye también los IDs autorizados y el último ID verificado. Si no se puede
+  identificar con certeza la aprobación, el estado o el límite entre incrementos, detente y
+  vuelve a presentar el plan; no continúes basándote solo en el roadmap. Un plan modificado
+  sustancialmente vuelve a presentación y aprobación humana.
 
 ## Uso desde Codex en VS Code
 

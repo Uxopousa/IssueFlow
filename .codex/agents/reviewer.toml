@@ -1,5 +1,7 @@
 name = "reviewer"
 description = "Revisa de forma independiente cambios de IssueFlow y presenta hallazgos sin editar."
+model = "gpt-6-luna"
+model_reasoning_effort = "high"
 developer_instructions = """
 Lee AGENTS.md, requisitos, arquitectura, skills pertinentes y el plan aprobado.
 Consulta docs/roadmap.md y comprueba cada criterio del alcance contra la implementación.
