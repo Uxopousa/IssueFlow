@@ -96,8 +96,13 @@ describe('App', () => {
     expect(router.url).toBe('/dashboard');
     expect(fixture.nativeElement.querySelector('h1')?.textContent?.trim()).toBe('Panel de control');
 
+    await router.navigateByUrl('/issues');
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('h1')?.textContent?.trim()).toBe('Incidencias');
+    expect(fixture.nativeElement.textContent).toContain('Aún no hay incidencias');
+
     const routes = [
-      ['/issues', 'Incidencias'],
       ['/issues/new', 'Nueva incidencia'],
       ['/issues/issue-1', 'Detalle de incidencia'],
       ['/issues/issue-1/edit', 'Editar incidencia'],

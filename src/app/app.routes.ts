@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { IssueListPageComponent } from './features/issues/pages/issue-list-page/issue-list-page.component';
 import { RoutePlaceholderComponent } from './shared/components/route-placeholder.component';
 
 export const routes: Routes = [
@@ -11,8 +12,7 @@ export const routes: Routes = [
   },
   {
     path: 'issues',
-    component: RoutePlaceholderComponent,
-    data: { title: 'Incidencias' },
+    component: IssueListPageComponent,
   },
   {
     path: 'issues/new',
