@@ -153,16 +153,18 @@ El diseño será responsive desde pantallas pequeñas. La presentación no debe 
 ## 10. Dirección del backend
 
 Las decisiones post-MVP aprobadas y las que siguen pendientes se registran en
-[`backend-roadmap.md`](backend-roadmap.md). La dirección acordada es ASP.NET Core Web API
-con .NET 10 LTS, PostgreSQL y ejecución local con Docker. La primera etapa no incluirá
-cuentas ni autenticación. No se expondrá una API públicamente hasta revisar el modelo de
-acceso y seguridad. El proveedor de alojamiento, el contrato HTTP, la estrategia de
-migración de `localStorage` y los detalles de contenedores siguen pendientes de sus etapas
-de planificación y aprobación.
+[`backend-roadmap.md`](backend-roadmap.md), con los
+[`requisitos del backend`](backend-requirements.md) y el
+[`contrato HTTP`](api-contract.md). La dirección acordada es ASP.NET Core Web API con
+.NET 10 LTS, Minimal APIs, un proyecto inicial, PostgreSQL y ejecución local con Docker. La primera etapa no incluirá
+cuentas ni autenticación. El backend no se desplegará remotamente por ahora: GitHub Pages
+seguirá publicando solo la demo estática Angular, que conservará `localStorage`. La
+integración con la API se utilizará desde el entorno local. Cualquier despliegue futuro
+requiere revisar y aprobar su modelo de acceso y seguridad.
 
-El backend debe conservar las reglas de incidencia establecidas para el MVP. La separación
-en proyectos o capas se decidirá al crear la solución, según las responsabilidades reales,
-sin imponer una arquitectura compleja antes de necesitarla.
+El backend debe conservar las reglas de incidencia establecidas para el MVP. Su estructura
+inicial será un monolito modular de un proyecto; las carpetas y responsabilidades internas
+se decidirán según las necesidades reales, sin añadir capas innecesarias.
 
 ## 11. Pruebas
 

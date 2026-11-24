@@ -7,9 +7,9 @@
 IssueFlow is a frontend MVP for creating, tracking, and managing issues in the
 browser. It is built with Angular and stores data locally in the current browser.
 
-> **Project status:** The frontend MVP is complete. A backend is planned for a
-> future stage; this version does not include a server, API, user accounts, or
-> synchronization between browsers or devices.
+> **Project status:** The frontend MVP is complete. The backend is planned for local
+> development with Docker. The GitHub Pages demo remains a static frontend using
+> `localStorage`; it does not call a deployed API or include user accounts.
 
 ## Features
 
@@ -130,5 +130,8 @@ The UI calls Angular services for issue operations; components do not access
 
 The [MVP roadmap](docs/roadmap.md) records the completed frontend. The planned backend
 direction, decisions, and staged work live in [docs/backend-roadmap.md](docs/backend-roadmap.md).
+Initial server requirements and the HTTP contract are in
+[docs/backend-requirements.md](docs/backend-requirements.md) and
+[docs/api-contract.md](docs/api-contract.md).
 The `backend/` directory is reserved for the ASP.NET Core Web API and does not contain a
-.NET project yet.
+.NET project yet. GitHub Actions deploys only the static frontend to GitHub Pages.
