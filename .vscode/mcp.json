@@ -3,6 +3,7 @@
   "servers": {
     "angular-cli": {
       "command": "npx",
+      "cwd": "${workspaceFolder}/frontend",
       "args": ["-y", "@angular/cli", "mcp"]
     }
   }

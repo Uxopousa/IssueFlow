@@ -46,8 +46,9 @@ architecture, frontend design, issue-domain rules, and testing. The
 rules live in [`ai/workflows/feature-development.md`](ai/workflows/feature-development.md).
 Shared instructions are in [`AGENTS.md`](AGENTS.md); product scope is in
 [`docs/requirements.md`](docs/requirements.md), technical structure in
-[`docs/architecture.md`](docs/architecture.md), and verified progress in
-[`docs/roadmap.md`](docs/roadmap.md).
+[`docs/architecture.md`](docs/architecture.md), and verified MVP progress in
+[`docs/roadmap.md`](docs/roadmap.md). Post-MVP backend decisions and stages are in
+[`docs/backend-roadmap.md`](docs/backend-roadmap.md).
 
 To start the workflow from Codex with the repository opened at its root, invoke
 `$feature-development` followed by the feature request. Codex presents the plan
@@ -62,6 +63,8 @@ fallback when custom-agent delegation is unavailable.
 - Reactive Forms for issue creation and editing.
 - Tailwind CSS 4 for styling.
 - Vitest for unit and component tests.
+- Planned backend: ASP.NET Core on .NET 10 LTS with PostgreSQL, no accounts initially, and a
+  local Docker workflow. See the backend roadmap for decisions and open items.
 
 ## Run locally
 
@@ -78,6 +81,7 @@ for supported Node.js versions.
 ```bash
 git clone https://github.com/Uxopousa/IssueFlow.git
 cd IssueFlow
+cd frontend
 npm ci
 npm start
 ```
@@ -100,6 +104,8 @@ available at [uxopousa.github.io/IssueFlow](https://uxopousa.github.io/IssueFlow
 
 ## Project scripts
 
+Run these commands from `frontend/`.
+
 | Command                     | Description                           |
 | --------------------------- | ------------------------------------- |
 | `npm start`                 | Start the Angular development server. |
@@ -110,11 +116,11 @@ available at [uxopousa.github.io/IssueFlow](https://uxopousa.github.io/IssueFlow
 
 ## Architecture
 
-The app is organized by responsibility:
+The frontend app is organized by responsibility:
 
-- `src/app/core/` contains the issue model, validation, state, and local storage.
-- `src/app/features/` contains the dashboard and issue pages.
-- `src/app/shared/` contains reusable UI elements.
+- `frontend/src/app/core/` contains the issue model, validation, state, and local storage.
+- `frontend/src/app/features/` contains the dashboard and issue pages.
+- `frontend/src/app/shared/` contains reusable UI elements.
 
 The UI calls Angular services for issue operations; components do not access
 `localStorage` directly. See the [architecture](docs/architecture.md) and
@@ -122,6 +128,7 @@ The UI calls Angular services for issue operations; components do not access
 
 ## Roadmap
 
-The current roadmap records the completed frontend MVP. Backend work is future
-scope and has not been implemented. See [docs/roadmap.md](docs/roadmap.md) for
-the current project status.
+The [MVP roadmap](docs/roadmap.md) records the completed frontend. The planned backend
+direction, decisions, and staged work live in [docs/backend-roadmap.md](docs/backend-roadmap.md).
+The `backend/` directory is reserved for the ASP.NET Core Web API and does not contain a
+.NET project yet.

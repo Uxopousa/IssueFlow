@@ -3,12 +3,13 @@
 ## Contrato y entrada
 
 `AGENTS.md` conserva las instrucciones comunes; `docs/requirements.md` define el alcance,
-`docs/architecture.md` la arquitectura y `docs/roadmap.md` el progreso y trabajo pendiente.
+`docs/architecture.md` la arquitectura, `docs/roadmap.md` el MVP Angular cerrado y
+`docs/backend-roadmap.md` el trabajo post-MVP del backend.
 Este documento define únicamente el proceso; no mantiene otra lista de funcionalidades.
 No implementes funcionalidades por el hecho de instalar o leer este workflow.
 
 Entrada: petición concreta del usuario, repositorio accesible y contexto suficiente para
-analizarla. El coordinador consulta el roadmap e identifica cambios existentes sin sobrescribirlos y comprueba
+analizarla. El coordinador consulta el roadmap del ámbito de la tarea e identifica cambios existentes sin sobrescribirlos y comprueba
 las capacidades reales del cliente antes de delegar. No instala herramientas ni cambia
 configuración para habilitar delegación automáticamente.
 
@@ -17,7 +18,7 @@ usuario lo solicite explícitamente; una petición que enumere varios IDs no bas
 activarlo. Batch admite solo IDs existentes del roadmap y nunca amplía requisitos, reglas de
 dominio ni el alcance aprobado.
 
-Antes de planificar o iniciar un batch, reconcilia `docs/roadmap.md` con Git, código y pruebas.
+Antes de planificar o iniciar un batch, reconcilia con Git, código y pruebas el roadmap del ámbito: `docs/roadmap.md` para el MVP y `docs/backend-roadmap.md` para backend.
 Corrige directamente discrepancias documentales objetivas cuando haya evidencia verificable,
 sin cambiar el alcance ni el significado de los estados. Si resolver una discrepancia requiere
 interpretación de producto, cambio de criterios, dependencias o prioridades, detente y consulta
@@ -37,7 +38,7 @@ Selecciona las skills existentes por responsabilidad:
 ## Fases y condiciones de salida
 
 1. **Planner analiza.** El coordinador delega la petición en `planner`, con acceso al
-   contexto real y los IDs del roadmap implicados. El Planner consulta siempre `docs/roadmap.md`,
+   contexto real y los IDs del roadmap implicados. El Planner consulta siempre el roadmap del ámbito,
    contrasta estados con código, pruebas y Git, e identifica dependencias y tareas pendientes.
    Una etiqueta de completado no prueba que el trabajo esté terminado. Recomienda el siguiente
    paso lógico sin considerarlo autorizado. Devuelve en el chat un plan identificado (por ejemplo, P1),
@@ -142,7 +143,8 @@ aprobación y secuencia actuales.
 
 ## Actualización del roadmap
 
-El coordinador mantiene `docs/roadmap.md`; Planner y Reviewer entregan propuestas en el chat
+El coordinador mantiene el roadmap correspondiente al ámbito: `docs/roadmap.md` para el MVP o
+`docs/backend-roadmap.md` para backend. Planner y Reviewer entregan propuestas en el chat
 y conservan su restricción de no editar archivos. Durante planificación, implementación y
 revisión se comunica la fase en la conversación sin modificar anticipadamente el registro.
 El roadmap conserva la fotografía del último corte revisado; al reanudar siempre se contrasta

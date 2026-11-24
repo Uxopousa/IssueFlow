@@ -19,9 +19,10 @@ workflow. Delega secuencialmente en `planner`, `developer` y `reviewer` cuando e
 permita cargar esos agentes. Aplica la alternativa manual documentada si no están disponibles.
 Reutiliza las seis skills existentes según el trabajo afectado.
 
-Consulta siempre `docs/roadmap.md` al iniciar o reanudar y contrástalo con código, pruebas
-y Git antes de recomendar una funcionalidad. Vincula el plan a sus IDs y criterios; no
-copies su lista de pendientes en esta skill. Si falta el roadmap o discrepa del código,
+Consulta siempre el roadmap del ámbito al iniciar o reanudar: `docs/roadmap.md` para el MVP
+y `docs/backend-roadmap.md` para backend. Contrástalo con código, pruebas y Git antes de
+recomendar una funcionalidad. Vincula el plan a sus IDs y criterios; no copies sus listas
+de pendientes en esta skill. Si falta el roadmap o discrepa del código,
 informa y aplica las reglas del workflow para reconciliarlo antes de depender de un cierre
 dudoso; en batch, esa reconciliación es previa a planificar el lote.
 

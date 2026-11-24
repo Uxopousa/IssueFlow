@@ -2,7 +2,7 @@
 
 ## 1. Objetivo
 
-IssueFlow utilizará una arquitectura Angular sencilla, orientada a funcionalidades y fácil de ampliar sin introducir capas innecesarias. La aplicación será un cliente local: la fuente de persistencia del MVP será `localStorage`.
+IssueFlow se organiza como un monorepo para mantener el frontend Angular y preparar una futura API ASP.NET Core. El MVP implementado sigue siendo un cliente local: su fuente de persistencia es `localStorage`. La API está planificada, pero aún no existe un proyecto .NET.
 
 La configuración existente confirma Angular 21, TypeScript estricto y Tailwind CSS 4 integrado con PostCSS. La arquitectura debe conservar estas decisiones y aprovechar las APIs modernas de Angular.
 
@@ -17,12 +17,28 @@ La configuración existente confirma Angular 21, TypeScript estricto y Tailwind 
 - Tailwind CSS 4 para los estilos de interfaz, usando la integración global ya existente.
 - Componentes pequeños, con una única responsabilidad y una relación clara entre presentación y lógica.
 
-## 3. Estructura de carpetas
+## 3. Estructura del monorepo
+
+La estructura acordada es:
+
+```text
+frontend/       Aplicación Angular 21 del MVP
+backend/        Reservado para la futura API ASP.NET Core; todavía sin proyecto .NET
+docs/           Requisitos, arquitectura y roadmaps
+ai/             Workflows de desarrollo asistido
+.agents/        Skills del repositorio
+.codex/         Definiciones de agentes
+```
+
+La aplicación frontend mantiene una arquitectura Angular sencilla, orientada a
+funcionalidades y fácil de ampliar sin introducir capas innecesarias.
+
+## 4. Estructura del frontend
 
 Se respeta la estructura existente:
 
 ```text
-src/app/
+frontend/src/app/
 ├── core/
 │   ├── models/
 │   └── services/
@@ -77,7 +93,7 @@ Contendrá componentes visuales genéricos y reutilizables, como estados vacíos
 
 Contendrá pipes de presentación reutilizables, únicamente cuando la transformación no deba vivir en un servicio o en la lógica de dominio.
 
-## 4. Estado y flujo de datos
+## 5. Estado y flujo de datos
 
 El servicio de incidencias mantendrá una Signal privada con la colección y expondrá Signals de solo lectura para el consumo de la interfaz. Las búsquedas, filtros y estadísticas se expresarán como estado derivado, evitando copias manuales y suscripciones innecesarias.
 
@@ -98,7 +114,7 @@ La interfaz nunca debe presentar una operación como guardada
 correctamente si la persistencia ha fallado.
 Los componentes no modificarán directamente las Signals del servicio ni mantendrán una segunda fuente de verdad.
 
-## 5. Rutas
+## 6. Rutas
 
 El router definirá rutas standalone para:
 
@@ -110,13 +126,13 @@ El router definirá rutas standalone para:
 
 Las rutas de detalle y edición deben tratar identificadores inexistentes de forma explícita, mostrando el estado de error definido en los requisitos. La carga diferida podrá utilizarse cuando simplifique la separación de funcionalidades, pero no se añadirá complejidad por anticipado.
 
-## 6. Formularios
+## 7. Formularios
 
 El formulario de incidencia se implementará con Reactive Forms y tipos estrictos. La página de creación lo inicializará con valores por defecto adecuados; la página de edición lo rellenará con la incidencia existente.
 
 Las validaciones de formulario serán la primera barrera de entrada. El servicio también deberá proteger las operaciones de negocio frente a datos inválidos, de modo que la validez no dependa únicamente de la interfaz.
 
-## 7. Persistencia y errores
+## 8. Persistencia y errores
 
 `localStorage` se tratará como una dependencia limitada y falible:
 
@@ -126,15 +142,29 @@ Las validaciones de formulario serán la primera barrera de entrada. El servicio
 - los errores de lectura y escritura se comunicarán mediante un estado de error visible;
 - no se usarán valores de éxito silenciosos para ocultar fallos.
 
-No se introducirá una abstracción de repositorio, librería de estado o sistema de eventos mientras el MVP no lo necesite.
+El MVP no introduce una abstracción de repositorio, librería de estado o sistema de eventos porque no los necesita. La futura integración con una API se planificará como una etapa aparte; no se crearán capas frontend para ella antes de definir su contrato.
 
-## 8. Presentación y accesibilidad
+## 9. Presentación y accesibilidad
 
-Tailwind CSS 4 se utilizará mediante las clases utilitarias y la hoja global ya configurada en `src/styles.css`. Los componentes deben priorizar HTML semántico, etiquetas asociadas a controles, foco visible, navegación por teclado, mensajes de error accesibles y contraste suficiente.
+Tailwind CSS 4 se utiliza mediante las clases utilitarias y la hoja global ya configurada en `frontend/src/styles.css`. Los componentes deben priorizar HTML semántico, etiquetas asociadas a controles, foco visible, navegación por teclado, mensajes de error accesibles y contraste suficiente.
 
 El diseño será responsive desde pantallas pequeñas. La presentación no debe contener reglas de negocio; los textos y estados visuales deben reflejar el estado real proporcionado por la capa de aplicación.
 
-## 9. Pruebas
+## 10. Dirección del backend
+
+Las decisiones post-MVP aprobadas y las que siguen pendientes se registran en
+[`backend-roadmap.md`](backend-roadmap.md). La dirección acordada es ASP.NET Core Web API
+con .NET 10 LTS, PostgreSQL y ejecución local con Docker. La primera etapa no incluirá
+cuentas ni autenticación. No se expondrá una API públicamente hasta revisar el modelo de
+acceso y seguridad. El proveedor de alojamiento, el contrato HTTP, la estrategia de
+migración de `localStorage` y los detalles de contenedores siguen pendientes de sus etapas
+de planificación y aprobación.
+
+El backend debe conservar las reglas de incidencia establecidas para el MVP. La separación
+en proyectos o capas se decidirá al crear la solución, según las responsabilidades reales,
+sin imponer una arquitectura compleja antes de necesitarla.
+
+## 11. Pruebas
 
 Se añadirán pruebas unitarias para la lógica relevante, especialmente:
 

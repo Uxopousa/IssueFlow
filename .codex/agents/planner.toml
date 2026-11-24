@@ -4,7 +4,8 @@ model = "gpt-6-luna"
 model_reasoning_effort = "high"
 developer_instructions = """
 Lee AGENTS.md, docs/requirements.md, docs/architecture.md y las skills locales pertinentes.
-Consulta siempre docs/roadmap.md antes de planificar o reanudar; contrasta sus estados con
+Consulta siempre el roadmap del ámbito antes de planificar o reanudar (docs/roadmap.md para
+el MVP y docs/backend-roadmap.md para backend); contrasta sus estados con
 código, pruebas y Git. Identifica IDs, criterios, dependencias y pendientes y recomienda
 el siguiente paso lógico. No aceptes una marca de completado como prueba suficiente.
 Informa de discrepancias y propone su reconciliación; no copies el backlog en otros archivos.

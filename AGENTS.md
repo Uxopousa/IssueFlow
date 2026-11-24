@@ -2,7 +2,7 @@
 
 ## Contexto del proyecto
 
-IssueFlow es una aplicación Angular 21 con TypeScript estricto y Tailwind CSS 4. El alcance funcional del MVP está definido en [`docs/requirements.md`](docs/requirements.md) y la arquitectura prevista en [`docs/architecture.md`](docs/architecture.md).
+IssueFlow es un monorepo con una aplicación Angular 21 en `frontend/` y un espacio reservado para una futura API ASP.NET Core en `backend/`. El alcance cerrado del MVP está definido en [`docs/requirements.md`](docs/requirements.md); la arquitectura actual y objetivo está en [`docs/architecture.md`](docs/architecture.md).
 
 ## Reglas de trabajo
 
@@ -23,21 +23,21 @@ IssueFlow es una aplicación Angular 21 con TypeScript estricto y Tailwind CSS 4
 
 ## Límites del MVP
 
-No añadas backend, autenticación, roles, permisos, notificaciones ni otras funcionalidades excluidas en [`docs/requirements.md`](docs/requirements.md) sin una petición explícita y una actualización previa del alcance.
+El MVP de [`docs/requirements.md`](docs/requirements.md) permanece cerrado y no incluye backend, autenticación, roles, permisos, notificaciones ni otras funcionalidades excluidas. La implementación del backend se realizará en un editor independiente; la asistencia se centrará en planificación, documentación y revisión, y no añadirá código backend salvo petición explícita. El trabajo post-MVP sigue [`docs/backend-roadmap.md`](docs/backend-roadmap.md): el roadmap orienta pero no autoriza implementación; cada etapa requiere requisitos y un plan aprobados previamente.
 
 ## Seguimiento del desarrollo
 
-- Consulta siempre [`docs/roadmap.md`](docs/roadmap.md) antes de planificar y al reanudar trabajo. Es la fuente única del progreso, dependencias y siguiente paso; no copies su lista en instrucciones o skills.
+- Consulta el roadmap correspondiente antes de planificar y al reanudar: [`docs/roadmap.md`](docs/roadmap.md) registra el MVP Angular cerrado y [`docs/backend-roadmap.md`](docs/backend-roadmap.md) el trabajo post-MVP de API. Cada uno es la fuente de progreso, dependencias y siguiente paso de su ámbito; no copies sus listas en instrucciones o skills.
 - Contrasta sus estados con código, pruebas y Git. Una marca de completado no sustituye la evidencia; informa de discrepancias y dependencias pendientes.
-- Vincula cada plan a los IDs estables del roadmap, su alcance y criterios de finalización. El roadmap no autoriza implementar ni ampliar alcance: el plan requiere aprobación explícita.
+- Vincula cada plan a los IDs estables del roadmap correspondiente, su alcance y criterios de finalización. El roadmap no autoriza implementar ni ampliar alcance: el plan requiere aprobación explícita.
 - Sigue [`ai/workflows/feature-development.md`](ai/workflows/feature-development.md) para proponer y aplicar actualizaciones de seguimiento solo después de conocer el resultado de la revisión. No marques completado con criterios, hallazgos aceptados o comprobaciones pertinentes pendientes.
 
 ## Calidad y herramientas de desarrollo
 
 - Respeta la configuración de ESLint y Prettier definida en el proyecto.
-- Ejecuta `npm run lint` después de implementar o modificar código.
+- Ejecuta `npm run lint` desde `frontend/` después de implementar o modificar código Angular.
 - El código debe superar ESLint sin errores antes de considerar terminada una tarea.
-- Ejecuta `npm run format:check` para comprobar que el formato es correcto.
+- Ejecuta `npm run format:check` desde `frontend/` para comprobar el formato de la aplicación.
 - No formatees automáticamente archivos que no estén relacionados con la tarea.
 - No desactives, debilites ni suprimas reglas de ESLint para ocultar problemas sin una justificación técnica.
 - Si una regla parece inadecuada para un caso concreto, explica el motivo antes de modificar la configuración.

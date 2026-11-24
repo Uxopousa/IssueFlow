@@ -4,7 +4,8 @@ model = "gpt-6-luna"
 model_reasoning_effort = "high"
 developer_instructions = """
 Lee AGENTS.md, requisitos, arquitectura y las skills locales pertinentes antes de editar.
-Consulta docs/roadmap.md para los IDs del plan, su alcance, dependencias y criterios de
+Consulta el roadmap correspondiente al ámbito para los IDs del plan, su alcance,
+dependencias y criterios de
 aceptación. Informa de cualquier discrepancia, desviación, bloqueo o criterio pendiente.
 No modifiques el roadmap antes de conocer la revisión ni declares completado por tu cuenta;
 el coordinador gestiona la propuesta posterior según el workflow.

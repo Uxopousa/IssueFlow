@@ -9,6 +9,9 @@ su organización técnica. Este registro es la fuente de progreso, dependencias 
 pendiente; el [workflow](../ai/workflows/feature-development.md) gobierna su desarrollo
 y actualización. La inclusión de una funcionalidad no aprueba su implementación.
 
+Este roadmap conserva únicamente el alcance y el cierre del MVP. El trabajo posterior de
+backend y sus decisiones se registran en el [roadmap backend](backend-roadmap.md).
+
 ## Estado actual
 
 Corte revisado el **23 de noviembre de 2026**. El lote B1 se inició sobre `5e14005`; IF-008
@@ -56,7 +59,7 @@ revisarse al aprobar cada plan sin ampliar el producto.
 
 Alcance: contrato tipado de la incidencia, campos editables y valores cerrados del MVP.
 Finalización: campos y tipos conformes a requisitos §3; identificadores y fechas quedan
-fuera de la entrada editable. Evidencia: [issue.model.ts](../src/app/core/models/issue.model.ts),
+fuera de la entrada editable. Evidencia: [issue.model.ts](../frontend/src/app/core/models/issue.model.ts),
 incluido en la comprobación TypeScript sin emisión.
 
 ### IF-002 — Validación y normalización del dominio
@@ -64,8 +67,8 @@ incluido en la comprobación TypeScript sin emisión.
 Alcance: reglas reutilizables para entradas y colecciones persistidas.
 Finalización: límites tras `trim()`, campos propios, valores permitidos, fechas serializadas
 e identificadores válidos y únicos en la colección; errores por campo y normalización sin
-mutar entradas. Evidencia: [validación](../src/app/core/models/issue-validation.ts) y
-[pruebas](../src/app/core/models/issue-validation.spec.ts). Las decisiones técnicas vigentes
+mutar entradas. Evidencia: [validación](../frontend/src/app/core/models/issue-validation.ts) y
+[pruebas](../frontend/src/app/core/models/issue-validation.spec.ts). Las decisiones técnicas vigentes
 de ISO UTC y propiedades propias no añaden funcionalidades al MVP.
 
 ### IF-003 — Persistencia local y errores de almacenamiento
@@ -73,8 +76,8 @@ de ISO UTC y propiedades propias no añaden funcionalidades al MVP.
 Alcance: lectura y escritura de colecciones en `localStorage`, sin presentación ni estado
 de negocio. Finalización: ausencia como colección vacía, datos inválidos rechazados,
 errores explícitos y ninguna reparación o sobrescritura durante la lectura; una escritura
-fallida no comunica éxito. Evidencia: [servicio](../src/app/core/services/issue-storage.service.ts)
-y [pruebas](../src/app/core/services/issue-storage.service.spec.ts).
+fallida no comunica éxito. Evidencia: [servicio](../frontend/src/app/core/services/issue-storage.service.ts)
+y [pruebas](../frontend/src/app/core/services/issue-storage.service.spec.ts).
 El estado visible de persistencia está integrado en las pantallas; su comportamiento conjunto
 con el flujo completo se comprobó en IF-012.
 
@@ -85,8 +88,8 @@ y coordinación del guardado. Finalización: estado protegido frente a mutación
 validación en el servicio, fechas e identificadores correctos y resultados distintos para
 guardado, solo memoria y rechazo. Si falla la carga no se sobrescribe almacenamiento sin
 autorización explícita; los fallos conservan cambios pendientes.
-Evidencia: [IssueService](../src/app/core/services/issue.service.ts) y
-[pruebas](../src/app/core/services/issue.service.spec.ts). No incluye confirmaciones ni UI.
+Evidencia: [IssueService](../frontend/src/app/core/services/issue.service.ts) y
+[pruebas](../frontend/src/app/core/services/issue.service.spec.ts). No incluye confirmaciones ni UI.
 
 ### IF-005 — Búsqueda y filtros combinados
 
@@ -95,9 +98,9 @@ Alcance: selección derivada de la colección fuente para título/descripción, 
 se puede representar la ausencia de filtro y los resultados se actualizan tras las operaciones
 sin mantener otra colección fuente. La búsqueda ignora mayúsculas, recorta los espacios
 exteriores y conserva los internos; `null` representa un filtro inactivo. Pruebas de vacío,
-coincidencias, combinaciones y actualización reactiva. Evidencia: [filtro](../src/app/core/models/issue-filter.ts),
-[pruebas del filtro](../src/app/core/models/issue-filter.spec.ts) y
-[servicio de incidencias](../src/app/core/services/issue.service.ts) con sus pruebas.
+coincidencias, combinaciones y actualización reactiva. Evidencia: [filtro](../frontend/src/app/core/models/issue-filter.ts),
+[pruebas del filtro](../frontend/src/app/core/models/issue-filter.spec.ts) y
+[servicio de incidencias](../frontend/src/app/core/services/issue.service.ts) con sus pruebas.
 La lógica está integrada en el dominio y se presenta en la interfaz del listado implementada
 en IF-008.
 
@@ -107,8 +110,8 @@ Alcance: total, abiertas, en progreso y resueltas desde la colección completa, 
 resultados filtrados (requisitos §2.1). Finalización: ceros sin incidencias y recomputación
 correcta tras cualquier operación, con pruebas. La distribución por prioridad es condicional
 al valor que aporte, como indican los requisitos; no se convierte en analítica avanzada.
-Evidencia: estadística derivada e inmutable en [IssueService](../src/app/core/services/issue.service.ts)
-y cobertura en [sus pruebas](../src/app/core/services/issue.service.spec.ts).
+Evidencia: estadística derivada e inmutable en [IssueService](../frontend/src/app/core/services/issue.service.ts)
+y cobertura en [sus pruebas](../frontend/src/app/core/services/issue.service.spec.ts).
 
 ### IF-007 — Estructura de navegación y arranque de la interfaz
 
@@ -117,9 +120,9 @@ Finalización: shell responsive y utilizable con teclado, skip link, landmarks y
 foco al contenido tras navegar sin robarlo en la carga inicial; `IssueService` se inicializa
 una vez. En IF-007 las rutas de dashboard, listado, creación, detalle y edición quedaron
 inicialmente conectadas a placeholders; IF-008 sustituyó el placeholder del listado por su
-página funcional. La raíz lleva al dashboard. Evidencia: [shell](../src/app/app.html),
-[rutas](../src/app/app.routes.ts), [placeholder](../src/app/shared/components/route-placeholder.component.ts)
-y [pruebas](../src/app/app.spec.ts). El contenido funcional se cierra en IF-008 a IF-011;
+página funcional. La raíz lleva al dashboard. Evidencia: [shell](../frontend/src/app/app.html),
+[rutas](../frontend/src/app/app.routes.ts), [placeholder](../frontend/src/app/shared/components/route-placeholder.component.ts)
+y [pruebas](../frontend/src/app/app.spec.ts). El contenido funcional se cierra en IF-008 a IF-011;
 ninguna ruta placeholder completa esas páginas.
 
 ### IF-008 — Listado y acciones de incidencias
@@ -130,9 +133,9 @@ Finalización: muestra título, categoría, prioridad, estado y fechas; usa los 
 de `IssueService`; cancelar `window.confirm` no cambia datos y confirmar elimina; un rechazo
 de cambio de estado restaura el valor vigente. Estado vacío ofrece crear y la ausencia de
 coincidencias permite limpiar criterios. El feedback distingue guardado, memoria únicamente
-y rechazo. Tras eliminar, el foco va a un elemento lógico. Evidencia: [página](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.ts),
-[template](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.html)
-y [pruebas](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.spec.ts).
+y rechazo. Tras eliminar, el foco va a un elemento lógico. Evidencia: [página](../frontend/src/app/features/issues/pages/issue-list-page/issue-list-page.component.ts),
+[template](../frontend/src/app/features/issues/pages/issue-list-page/issue-list-page.component.html)
+y [pruebas](../frontend/src/app/features/issues/pages/issue-list-page/issue-list-page.component.spec.ts).
 IF-008 incluyó enlaces a los placeholders de creación, edición y detalle, pero no completaba por
 sí mismo IF-009 ni IF-010. IF-009 sustituyó los placeholders de creación y edición; IF-010
 sustituyó el de detalle. Teclado y responsive se verifican en este flujo.
@@ -145,10 +148,10 @@ envío inválido bloqueado, metadatos protegidos y resultado reflejado en las vi
 existan. Edición de recurso inexistente con salida al listado. No se anuncia guardado
 cuando el cambio solo permanece en memoria; controles etiquetados y utilizables con teclado.
 Evidencia: página y formulario compartidos en
-[IssueFormPageComponent](../src/app/features/issues/pages/issue-form-page/issue-form-page.component.ts),
-[template](../src/app/features/issues/pages/issue-form-page/issue-form-page.component.html),
-[pruebas](../src/app/features/issues/pages/issue-form-page/issue-form-page.component.spec.ts)
-y [rutas](../src/app/app.routes.ts). La revisión independiente detectó un hallazgo medio sobre
+[IssueFormPageComponent](../frontend/src/app/features/issues/pages/issue-form-page/issue-form-page.component.ts),
+[template](../frontend/src/app/features/issues/pages/issue-form-page/issue-form-page.component.html),
+[pruebas](../frontend/src/app/features/issues/pages/issue-form-page/issue-form-page.component.spec.ts)
+y [rutas](../frontend/src/app/app.routes.ts). La revisión independiente detectó un hallazgo medio sobre
 la visibilidad inmediata tras crear; se corrigió y re-revisó sin hallazgos. En la ejecución de
 IF-009 pasaron 156 tests en ocho archivos, lint, `format:check`, build y `git diff --check`.
 Después, la suite integrada de B2 pasó con 165 tests en nueve archivos y las mismas
@@ -163,11 +166,11 @@ Alcance: información completa, edición, eliminación confirmada y vuelta al li
 (requisitos §2.4). Finalización: identificadores inexistentes o eliminados muestran error
 y salida útil; acciones coherentes con el servicio y feedback de errores, con teclado y
 responsive. La eliminación actualiza el estado compartido y abandona el recurso eliminado.
-Evidencia: [página de detalle](../src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.ts),
-[template](../src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.html),
-[pruebas](../src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.spec.ts),
-[rutas e integración](../src/app/app.routes.ts) y aviso del resultado al volver al listado en
-[IssueListPageComponent](../src/app/features/issues/pages/issue-list-page/issue-list-page.component.ts).
+Evidencia: [página de detalle](../frontend/src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.ts),
+[template](../frontend/src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.html),
+[pruebas](../frontend/src/app/features/issues/pages/issue-detail-page/issue-detail-page.component.spec.ts),
+[rutas e integración](../frontend/src/app/app.routes.ts) y aviso del resultado al volver al listado en
+[IssueListPageComponent](../frontend/src/app/features/issues/pages/issue-list-page/issue-list-page.component.ts).
 La revisión detectó un defecto de parámetro al reutilizar la ruta; se corrigió con `toSignal` y
 se re-revisó sin hallazgos. La verificación integrada pasó con **165 tests en nueve archivos**,
 lint, `format:check`, build y `git diff --check`. En Chrome se comprobaron los datos y fechas,
@@ -182,10 +185,10 @@ Finalización: cifras coherentes con el estado actual, actualización tras opera
 estadísticas a cero con invitación a crear cuando no hay datos. Presentación legible y
 responsive; no duplica conteos en componentes. Ante un fallo de carga no presenta los ceros
 como confirmación de almacenamiento vacío; comunica cuando los cambios solo están en memoria.
-Evidencia: [página](../src/app/features/dashboard/dashboard-page/dashboard-page.component.ts),
-[template](../src/app/features/dashboard/dashboard-page/dashboard-page.component.html),
-[pruebas](../src/app/features/dashboard/dashboard-page/dashboard-page.component.spec.ts) y
-[ruta](../src/app/app.routes.ts).
+Evidencia: [página](../frontend/src/app/features/dashboard/dashboard-page/dashboard-page.component.ts),
+[template](../frontend/src/app/features/dashboard/dashboard-page/dashboard-page.component.html),
+[pruebas](../frontend/src/app/features/dashboard/dashboard-page/dashboard-page.component.spec.ts) y
+[ruta](../frontend/src/app/app.routes.ts).
 
 ### IF-012 — Verificación integrada y cierre del MVP
 

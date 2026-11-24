@@ -28,33 +28,39 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Use the repository's npm version
         run: npm install --global npm@11.16.0
 
       - name: Install dependencies
         run: npm ci
+        working-directory: frontend
 
       - name: Check formatting
         run: npm run format:check
+        working-directory: frontend
 
       - name: Run lint
         run: npm run lint
+        working-directory: frontend
 
       - name: Run tests
         run: npm test -- --watch=false
+        working-directory: frontend
 
       - name: Build for the GitHub Pages project path
         run: npm run build -- --base-href /IssueFlow/
+        working-directory: frontend
 
       - name: Add SPA route fallback
-        run: cp dist/issueflow/browser/index.html dist/issueflow/browser/404.html
+        run: cp frontend/dist/issueflow/browser/index.html frontend/dist/issueflow/browser/404.html
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v5
         with:
-          path: dist/issueflow/browser
+          path: frontend/dist/issueflow/browser
 
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
